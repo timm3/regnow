@@ -2,11 +2,11 @@ require '../app'
 require 'test/unit'
 require 'rack/test'
 
-class MyAppTest < Test::Unit::TestCase
+class RegNowTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Sinatra::Application
+    RegNow
   end
 
   def test_my_default
