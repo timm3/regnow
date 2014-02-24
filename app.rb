@@ -1,8 +1,7 @@
 require 'sinatra'
+require 'mongo_mapper'
 
 class RegNow < Sinatra::Application
-  enable :sessions
-
   configure do
     set :bind, '0.0.0.0'
     set :server, "puma"
@@ -18,3 +17,4 @@ end
 require_relative 'helpers/init'
 require_relative 'models/init'
 require_relative 'routes/init'
+require_relative 'config/db'
