@@ -1,6 +1,14 @@
 require 'mechanize'
 
 class CourseManager
+
+  def initialize()
+    @pool_netid = "netid" # pull from Mongo user pool
+    @pool_password = "password" # pull from Mongo user pool
+    @login_url = 'https://eas.admin.uillinois.edu/eas/servlet/EasLogin?redirect=https://webprod.admin.uillinois.edu/ssa/servlet/SelfServiceLogin?appName=edu.uillinois.aits.SelfServiceLogin&dad=BANPROD1'
+    @select_term_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfcls.p_sel_crse_search'
+  end
+
   def CourseManager.add_course(name, crn, code, instructor)
     course = Course.create(:name => name, :crn => crn, :code => code, :instructor => instructor)
     course.save
@@ -9,12 +17,12 @@ class CourseManager
   def CourseManager.get_spots(crn)
     bot = Mechanize.new
     bot.user_agent_alias = 'Mac Safari'
-    page = bot.get('https://eas.admin.uillinois.edu/eas/servlet/EasLogin?redirect=https://webprod.admin.uillinois.edu/ssa/servlet/SelfServiceLogin?appName=edu.uillinois.aits.SelfServiceLogin&dad=BANPROD1')  
+    page = bot.get(@login_url)  
     login_form = page.form('easForm')
-    login_form.inputEnterpriseId = "netid"
-    login_form.password = "password"
+    login_form.inputEnterpriseId = @pool_netid
+    login_form.password = @pool_password
     page = bot.submit(login_form, login_form.button_with(:value => 'Login'))
-    page = bot.get('https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfcls.p_sel_crse_search')
+    page = bot.get(@select_term_url)
     term_form = page.form_with(:action => '/BANPROD1/bwckgens.p_proc_term_date')
     term_form.field_with(:name => 'p_term').options[1].select # Select Spring 2014 (latest) semester
     page = bot.submit(term_form, term_form.button_with(:value => 'Submit'))
