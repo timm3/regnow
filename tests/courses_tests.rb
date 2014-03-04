@@ -2,7 +2,7 @@ require '../app'
 require 'test/unit'
 require 'rack/test'
 
-class RegNowViewsTest < Test::Unit::TestCase
+class RegNowCoursesTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
