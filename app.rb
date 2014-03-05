@@ -14,6 +14,12 @@ class RegNow < Sinatra::Application
   end
 end
 
+Thread.new do # TODO: process course search queue
+  while true do
+     sleep 60
+  end
+end
+
 require_relative 'helpers/init'
 require_relative 'models/init'
 require_relative 'routes/init'

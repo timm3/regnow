@@ -18,10 +18,13 @@ class CourseManager
     login_form = page.form('easForm')
     login_form.inputEnterpriseId = @pool_netid
     login_form.password = @pool_password
+    sleep 1
     page = @bot.submit(login_form, login_form.button_with(:value => 'Login'))
+    sleep 1
     page = @bot.get(@select_term_url)
     term_form = page.form_with(:action => '/BANPROD1/bwckgens.p_proc_term_date')
     term_form.field_with(:name => 'p_term').options[1].select # Select Spring 2014 (latest) semester
+    sleep 1
     page = @bot.submit(term_form, term_form.button_with(:value => 'Submit'))
   end
 
@@ -41,7 +44,7 @@ class CourseManager
   def register_course(crn)
     login
     page = @bot.get(@add_course_url)
-    
+
     # TODO: submit CRN add whenever summer registration starts
   end
 end
