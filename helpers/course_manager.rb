@@ -6,6 +6,7 @@ class CourseManager
     @netid = netid
     @password = password # TODO: decrypt later
     @login_url = 'https://eas.admin.uillinois.edu/eas/servlet/EasLogin?redirect=https://webprod.admin.uillinois.edu/ssa/servlet/SelfServiceLogin?appName=edu.uillinois.aits.SelfServiceLogin&dad=BANPROD1'
+    @logout_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/twbkwbis.P_Logout'
     @select_term_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfcls.p_sel_crse_search'
     @current_term_crn = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwckschd.p_disp_detail_sched?term_in=120141&crn_in='
     @add_course_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfreg.P_AltPin'
@@ -28,6 +29,13 @@ class CourseManager
     page = @bot.submit(term_form, term_form.button_with(:value => 'Submit'))
   end
 
+  def logout
+    page = @bot.get(@logout_url)
+    logout_form = page.form_with(:action => 'logout.do')
+    sleep 1
+    page = @bot.submit(logout_form, logout_form.button_with(:value => 'Yes'))
+  end
+
   def get_num_spots(crn)
 =begin
     options_form = page.form_with(:action => '/BANPROD1/bwskfcls.P_GetCrse')
@@ -46,5 +54,7 @@ class CourseManager
     page = @bot.get(@add_course_url)
 
     # TODO: submit CRN add whenever summer registration starts
+
+    logout
   end
 end
