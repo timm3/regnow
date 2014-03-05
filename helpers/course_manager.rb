@@ -13,11 +13,6 @@ class CourseManager
     @bot = Mechanize.new
   end
 
-  def add_course(name, crn, code, instructor)
-    course = Course.create(:name => name, :crn => crn, :code => code, :instructor => instructor)
-    course.save
-  end
-
   def get_spots(crn)
 =begin
     page = @bot.get(@login_url)  
@@ -38,11 +33,5 @@ class CourseManager
     page = @bot.get(@current_term_crn + crn.to_s)
     remaining_seats = page.search('td:nth-child(4)').first.text
     return remaining_seats
-  end
-
-  def reset_database()
-    Course.delete_all
-    
-    # TODO: populate courses collection here...
   end
 end
