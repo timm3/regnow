@@ -13,4 +13,10 @@ class RegNowCoursesTest < Test::Unit::TestCase
     get '/'
     assert_equal 'Hello world!', last_response.body
   end
+
+  def test_get_num_spots
+  	test_bot = CourseManager.new
+  	num_spots = test_bot.get_num_spots(48263)
+  	assert_equal num_spots, 0
+  end
 end
