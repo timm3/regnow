@@ -1,13 +1,15 @@
 class Course
   include MongoMapper::Document
-
-  key :name,          String
-  key :crn,           Integer
-  key :code,          String
-  key :instructor,    String
-  key :open_slots,    Integer
-  key :total_slots,   Integer
-  key :section,       String
-  key :subject,       String
-  key :type,          String
+  
+  key :title,         String
+  key :credit_hours   Array
+  key :term           String
+  key :subject        String
+  key :year	          String
+  key :crns           Array
+  key :description    String
+  key :code           String
+  key :course_id      String
+  #key :total_slots    Integer
+  #key :open_slots     Integer
 end
