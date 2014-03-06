@@ -5,6 +5,16 @@ module DatabaseManager
     course.save
   end
 
+  def DatabaseManager.check_crn(crn)
+    Course.find_each() do |course|
+      if course[:crns].include?(crn.to_s)
+        return true
+      end
+    end
+
+    return false
+  end
+
   def DatabaseManager.reset_database()
     Course.delete_all
     
