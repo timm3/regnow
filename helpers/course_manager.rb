@@ -3,7 +3,7 @@ require_relative 'database_manager'
 
 class CourseManager
 
-  def initialize(netid="netid", password="password")
+  def initialize(netid=$netid, password=$password)
     @netid = netid
     @password = password # TODO: decrypt later
     @login_url = 'https://eas.admin.uillinois.edu/eas/servlet/EasLogin?redirect=https://webprod.admin.uillinois.edu/ssa/servlet/SelfServiceLogin?appName=edu.uillinois.aits.SelfServiceLogin&dad=BANPROD1'

@@ -32,6 +32,10 @@ class RegNowCoursesTest < Test::Unit::TestCase
     result = @test_bot.register_course(52738)
     assert_equal result, true
   end
+
+  def test_environment
+    assert_equal $environment, "development"
+  end
 end
 
 
