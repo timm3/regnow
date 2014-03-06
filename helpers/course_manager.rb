@@ -36,7 +36,7 @@ class CourseManager
     page = @bot.submit(logout_form, logout_form.button_with(:value => 'Yes'))
   end
 
-  def get_num_spots(crn)
+  def get_open_spots(crn)
 =begin
     options_form = page.form_with(:action => '/BANPROD1/bwskfcls.P_GetCrse')
     page = @bot.submit(options_form, options_form.button_with(:value => 'Advanced Search'))
@@ -45,8 +45,14 @@ class CourseManager
     page = @bot.submit(crn_form, crn_form.button_with(:name => 'SUB_BTN'))
 =end
     page = @bot.get(@current_term_crn + crn.to_s)
-    remaining_seats = page.search('td:nth-child(4)').first.text
+    remaining_seats = page.search('/html/body/div[3]/table[1]/tr[2]/td/table/tr[2]/td[3]').first.text
     return remaining_seats.to_i
+  end
+
+  def get_total_spots(crn)
+    page = @bot.get(@current_term_crn + crn.to_s)
+    total_seats = page.search('/html/body/div[3]/table[1]/tr[2]/td/table/tr[2]/td[2]').text
+    return total_seats.to_i
   end
 
   def register_course(crn)
