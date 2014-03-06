@@ -1,6 +1,6 @@
 development:
   host: digitalocean-4.perryhuang.com
   port: 27017
-  database: regnow
+  database: courses
 
 environment: development

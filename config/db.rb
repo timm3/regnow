@@ -1,4 +1,4 @@
-@config = YAML.load_file("config/database.yaml")
+@config = YAML.load_file(File.dirname(__FILE__) + "/database.yaml")
 
 @environment = @config["environment"]
 

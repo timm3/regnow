@@ -1,6 +1,7 @@
 class Course
   include MongoMapper::Document
-  
+  set_collection_name "courses_general"
+
   key :title,         String
   key :credit_hours   Array
   key :term           String

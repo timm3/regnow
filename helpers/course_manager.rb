@@ -17,8 +17,8 @@ class CourseManager
   def login
     page = @bot.get(@login_url)  
     login_form = page.form('easForm')
-    login_form.inputEnterpriseId = @pool_netid
-    login_form.password = @pool_password
+    login_form.inputEnterpriseId = @netid
+    login_form.password = @password
     sleep 1
     page = @bot.submit(login_form, login_form.button_with(:value => 'Login'))
     sleep 1
@@ -46,7 +46,7 @@ class CourseManager
 =end
     page = @bot.get(@current_term_crn + crn.to_s)
     remaining_seats = page.search('td:nth-child(4)').first.text
-    return remaining_seats
+    return remaining_seats.to_i
   end
 
   def register_course(crn)
