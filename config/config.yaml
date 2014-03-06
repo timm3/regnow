@@ -1,5 +1,5 @@
 development:
-  host: digitalocean-4.perryhuang.com
+  host: host
   port: 27017
   database: courses
 
