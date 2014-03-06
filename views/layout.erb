@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RegNow!</title>
+    <% # Includes %>
+    <link href="<%= url('/public/bootstrap/css/bootstrap.css') %>" rel="stylesheet"></link>
+    <link href="<%= url('/public/regnow.css') %>" rel="stylesheet"></link>
+    <script src="<%= url('/public/bootstrap/js/bootstrap.js') %>"></script>
+  </head>
+  <body style="padding-top: 40px;">
+    <% # Menu bar %>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <% # Template's main title. %>
+          <a class="brand" href="/">
+            RegNow! 
+          </a>
+          <ul class="nav">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/status">Status</a>
+            </li>
+            <li>
+              <a href="/signup">Sign Up</a>
+            </li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Menu
+              <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a href="/registration">Registration</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="/about">About</a>
+            </li>
+              <a href="/contact">Contact</a>
+            <% end %>
+          </ul>
+          <ul class="nav pull-right">
+            <form action="/search" class="navbar-search pull-left" method="post">
+              <input class="search-query" name="query" placeholder="Search" type="text"></input>
+              <button class="btn" type="submit">Search</button>
+            </form>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container page">
+      <%= yield %>
+    </div>
+  </body>
+  <div id="footer-wrapper">
+    <div class="container">
+      <p class="muted credit">
+      <% # footer here %>
+        Made by RegNow!
+      </p>
+    </div>
+  </div>
+</html>
