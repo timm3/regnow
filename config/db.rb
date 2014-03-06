@@ -3,8 +3,9 @@
 $environment = @config["environment"]
 $netid = @config["netid"]
 $password = @config["password"]
-$twilio_account_sid = @config["twilio_account_sid"]
-$twilio_auth_token = @config["twilio_auth_token"]
+twilio_account_sid = @config["twilio_account_sid"]
+twilio_auth_token = @config["twilio_auth_token"]
+$twilio_client = Twilio::REST::Client.new(twilio_account_sid, twilio_auth_token)
 
 @db_host = @config[$environment]["host"]
 @db_port = @config[$environment]["port"]
