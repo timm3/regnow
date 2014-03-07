@@ -35,7 +35,8 @@ class RegNowCoursesTest < Test::Unit::TestCase
 
   def test_course_crns
     Course.find_each() do |course|
-      assert_not_nil course[:crns]
+      contains = course[:crns].length > 0
+      assert_equal contains, true
     end
   end
 
