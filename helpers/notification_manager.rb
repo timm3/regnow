@@ -1,4 +1,5 @@
 require 'twilio-ruby' # See: https://github.com/twilio/twilio-ruby
+require 'pony'
 
 module NotificationManager
 
@@ -14,7 +15,16 @@ module NotificationManager
     return true
   end
 
-  def NotificationManager.send_email_notification(user, crn)
-    # TODO
+  def NotificationManager.send_email_notification(email=false, crn=false)
+    if !email || !crn
+      return false
+    end
+    Pony.mail({
+      :to => email,
+      :via => :sendmail,
+      :subject => "RegNow! #{crn} is now available.",
+      :body => "#{crn} is now available. Register now: https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfreg.P_AltPin"
+    })
+    return true
   end
 end

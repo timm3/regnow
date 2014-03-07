@@ -10,4 +10,5 @@ gem 'mongo_mapper'
 gem 'nokogiri'
 gem 'mechanize'
 gem 'twilio-ruby'
-gem 'mail'
+gem 'pony'
+
