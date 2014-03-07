@@ -33,6 +33,12 @@ class RegNowCoursesTest < Test::Unit::TestCase
     assert_equal result, true
   end
 
+  def test_course_crns
+    Course.find_each() do |course|
+      assert_not_nil course[:crns]
+    end
+  end
+
   def test_environment
     assert_equal $environment, "development"
   end
