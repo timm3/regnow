@@ -1,7 +1,7 @@
 module DatabaseManager
 
-  def DatabaseManager.add_course(name, crn, code, instructor)
-    course = Course.create(:name => name, :crn => crn, :code => code, :instructor => instructor)
+  def DatabaseManager.add_course(name, crns, code, instructor)
+    course = Course.create(:name => name, :crns => crns, :code => code, :instructor => instructor)
     course.save
   end
 
@@ -17,7 +17,7 @@ module DatabaseManager
 
   def DatabaseManager.reset_database()
     Course.delete_all
-    
+
     # TODO: populate courses collection here...
   end
 end
