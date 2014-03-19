@@ -81,4 +81,10 @@ class CourseManager
 
     return true
   end
+
+  def can_register(crn)
+
+    # TODO: returns if user can or cannot register for course
+
+  end
 end
