@@ -17,6 +17,7 @@ class Section
 		@name = nm
 	end
 
+	#users can register for classes only if number of students enrolled in less than capacity
 	def canRegister
 		if(num_enrolled.to_i<capacity.to_i)
 			return true
@@ -30,139 +31,139 @@ end
 classes = Array.new
 subjects = Array.new
 
-	File.open(File.dirname(__FILE__) + "/classes.csv", 'r') do |f1|  
-		while line = f1.gets  
+	File.open(File.dirname(__FILE__) + "/classes.csv", 'r') do |f1|
+		while line = f1.gets
 			val = line.split(",")
 			if(val.size == 2)
 				subjects.push(val)
 			else
 				classes.push(Section.new(val[0],val[1],val[2],val[3],val[4],val[5]))
 			end
-		end  
-	end  
+		end
+	end
 
 get '/enterprise' do
-	test = ""
+	html_output = ""
 
-	File.open('views/mock/login.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end  
+	File.open('views/mock/login.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	test
+	html_output
 end
 
 post '/login.do' do
-  
+
   if params[:password] == "test" and params[:inputEnterpriseId]=="student2"
 
-  	test = ""
+  	html_output = ""
 
-	File.open('views/mock/banner_welcome.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end  
+	File.open('views/mock/banner_welcome.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	test
-  	
+	html_output
+
   else
-  	test = ""
-  	File.open('views/mock/login_failed.html', 'r') do |f1|  
-  		
-		while line = f1.gets  
-			test += line
-		end  
+  	html_output = ""
+  	File.open('views/mock/login_failed.html', 'r') do |f1|
 
-	end  
-	test
+		while line = f1.gets
+			html_output += line
+		end
+
+	end
+	html_output
   end
-  
+
 end
 
 get '/reg_and_records' do
-	test = ""
+	html_output = ""
 
-	File.open('views/mock/banner_reg_and_records.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end  
+	File.open('views/mock/banner_reg_and_records.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	test
+	html_output
 end
 
 get '/registration' do
-	test = ""
+	html_output = ""
 
-	File.open('views/mock/banner_registration.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end  
+	File.open('views/mock/banner_registration.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	test
+	html_output
 end
 
 get '/registration_agreement' do
-	test = ""
+	html_output = ""
 
-	File.open('views/mock/banner_reg_agreement.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end  
+	File.open('views/mock/banner_reg_agreement.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	test
+	html_output
 end
 
 get '/select_term' do
-	test = ""
+	html_output = ""
 
-	File.open('views/mock/banner_select_term.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end  
+	File.open('views/mock/banner_select_term.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	test
+	html_output
 end
 
 post '/select_classes' do
-	test = ""
+	html_output = ""
 
 
 
-	File.open('views/mock/banner_lookup_classes.html', 'r') do |f1|  
-		while line = f1.gets  
-			test += line
-		end  
-	end 
+	File.open('views/mock/banner_lookup_classes.html', 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
 
-	index = test.index("<!--OPTIONS-->")
+	index = html_output.index("<!--OPTIONS-->")
 
 	insertedOptions = ""
 	for sub in subjects
 		insertedOptions += "<OPTION VALUE=\""+sub[0]+"\">"+sub[1]
 	end
 
-	test.insert(index,insertedOptions)
+	html_output.insert(index,insertedOptions)
 
-	test
+	html_output
 end
 
 post '/get_courses' do
 	if params[:SUB_BTN] == "Course Search"
-		test = ""
+		html_output = ""
 
-		File.open('views/mock/banner_class_list.html', 'r') do |f1|  
-			while line = f1.gets  
-				test += line
-			end  
-		end  
+		File.open('views/mock/banner_class_list.html', 'r') do |f1|
+			while line = f1.gets
+				html_output += line
+			end
+		end
 
-		index = test.index("<!--SUBJECT-->")
+		index = html_output.index("<!--SUBJECT-->")
 
 		subName = "ERROR_NO_SUBJECT"
 		for sub in subjects
@@ -171,7 +172,7 @@ post '/get_courses' do
 			end
 		end
 
-		test.insert(index,"<TR><TH CLASS=\"ddheader\" scope=\"col\" colspan=\"4\" style=\"font-size:16px;\">"+subName+"</TH></TR>")		
+		html_output.insert(index,"<TR><TH CLASS=\"ddheader\" scope=\"col\" colspan=\"4\" style=\"font-size:16px;\">"+subName+"</TH></TR>")
 
 
 		rows = ""
@@ -224,30 +225,30 @@ post '/get_courses' do
 				</TR>"
 			end
 		end
-		index = test.index("<!--COURSES-->")
+		index = html_output.index("<!--COURSES-->")
 
-		test.insert(index,rows)
+		html_output.insert(index,rows)
 
-		test
+		html_output
 	else
-		test = ""
+		html_output = ""
 
-		File.open('views/mock/banner_advanced_search.html', 'r') do |f1|  
-			while line = f1.gets  
-				test += line
-			end  
-		end  
+		File.open('views/mock/banner_advanced_search.html', 'r') do |f1|
+			while line = f1.gets
+				html_output += line
+			end
+		end
 
-		index = test.index("<!--OPTIONS-->")
+		index = html_output.index("<!--OPTIONS-->")
 
 		insertedOptions = ""
 		for sub in subjects
 			insertedOptions += "<OPTION VALUE=\""+sub[0]+"\">"+sub[1]
 		end
 
-		test.insert(index,insertedOptions)
+		html_output.insert(index,insertedOptions)
 
-		test
+		html_output
 	end
 end
 
@@ -257,11 +258,11 @@ post '/search_results' do
 	#output += " crs: "+params[:sel_crse]
 	#output += " crn: "+params[:crn]
 
-	File.open('views/mock/banner_class_results.html', 'r') do |f1|  
-			while line = f1.gets  
+	File.open('views/mock/banner_class_results.html', 'r') do |f1|
+			while line = f1.gets
 				output += line
-			end  
-	end  
+			end
+	end
 
 		index = output.index("<!--SUBJECT-->")
 
@@ -272,7 +273,7 @@ post '/search_results' do
 			end
 		end
 
-		output.insert(index,"<TR><TH COLSPAN=\"26\" CLASS=\"ddtitle\" scope=\"colgroup\" >"+subName+"</TH></TR>")		
+		output.insert(index,"<TR><TH COLSPAN=\"26\" CLASS=\"ddtitle\" scope=\"colgroup\" >"+subName+"</TH></TR>")
 
 		results =""
 		for course in classes
