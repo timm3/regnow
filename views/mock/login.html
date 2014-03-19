@@ -1,0 +1,170 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml2/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Language" content="en" />	
+    <meta name="KEYWORDS" content="University of Illinois, Banner, UI-Integrate System, UI-Integrate, Online, education, distance learning, continuing education, Higher Education, electronic learning, Accessibility, Banner Accessibility, University of Illinois Global Campus, Global Campus, Online Univerity, Online Courses, Banner, Front End, Global Campus Front End, User Interface, Global Campus Registration, Online, education, Higher Education, Enterprise Application Login,  Password Administration Application" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1"/>
+    <meta http-equiv="cache-control" content="no-store, must-revalidate, private"/>
+    
+    <link rel="stylesheet" href="./login.css" type="text/css">
+    <script type="text/javascript" src="./login.js"></script>
+    
+    <title>Enterprise Authentication Service: Login</title>
+
+  </head>
+  <body class="body" onLoad="setFocus()">
+    <div class="container">  <!-- Begin div for container -->
+
+      <h1 class="hide">Enterprise Authentication Service Login</h1>
+      <div class="middlespace">       
+        <div class="imageheader">
+        <!-- blank -->
+        </div>
+        
+        <div class="rule">
+          <hr />
+        </div>
+        
+        <form method="post" id="easFormId" name="easForm" action="login.do">
+        
+ 		    <div class="idfirstrow">
+          
+
+          <div class="idfirstrow1"> 		    
+            <div id="entIdMessage">(<span style="font-weight: bold;">Important:</span> DO NOT include "@uillinois.edu", "@illinois.edu", "@uic.edu" or "@uis.edu" when entering your EnterpriseID)</div>
+          
+            <div class="firstnest1"> <!-- Begin Nesting -->
+              <label for="entid">EnterpriseID:</label>
+            </div><!-- End Div for first nest row cell 1-->
+            <div class="firstnest2"> <!-- Begin Div for first nest row cell 2 -->
+              <INPUT type='text' name='inputEnterpriseId' id='ENT_ID' tabindex='1' value='' size='18' maxlength='30'></INPUT>
+
+            </div><!-- End Div for first nest row cell 2-->
+            
+            
+            
+            <div class="firstnest3"> <!-- Begin Div for first nest row cell 3 --> 
+		          <label for="password">Password:</label>
+	          </div><!-- End Div for first nest row cell 3-->
+	          <div class="firstnest4"> <!-- Begin Div for first nest row cell 4 -->
+              <INPUT type='password' name='password' id='PASSWORD' tabindex='2' value='' size='18' maxlength='30'></INPUT>
+
+              <input type="hidden" name="queryString" value="null"/>
+	          </div><!-- End Div for first nest row cell 4-->
+	
+	          <div class="firstnest5"> <!-- Begin Div for first nest row cell 5 --> 
+		          &nbsp;
+	          </div><!-- End Div for first nest row cell 5-->
+	          <div class="firstnest6"> <!-- Begin Div for first nest row cell 6 -->
+              <div class="idbuttons">
+                <INPUT type='submit' name='BTN_LOGIN' tabindex='3' value='Login'>
+</INPUT>
+
+              </div>
+	          </div><!-- End Div for first nest row cell 6-->
+	          
+          </div> <!-- idfirstrow1 -->
+          
+          <div class="idfirstrow2"> <!-- Begin Div for id second nest row cell 2 --> 
+            
+              <div class="secondnest1"> <!-- Begin Nesting row cell 1-->
+                <strong>ATTENTION: FIRST-TIME USERS</strong><br />
+                  of UI Enterprise applications! You must obtain your EnterpriseID and set up your Enterprise Password before you can use the applications.
+              </div><!-- End Div for second nest row cell 1-->
+	
+              <div class="secondnest2"> <!-- Begin Div for second nest row cell 2 -->
+                <div id="firstTimeUser">
+                  <!-- <a href="../servlet/FirstTimeUsers">First Time Users</a> -->
+                  <a href="../servlet/FirstTimeUsers">First Time Users</a>
+                </div>
+              </div><!-- End Div for second nest row cell 2-->
+              
+            
+            
+            
+          </div> <!-- idfirstrow2 -->
+
+          <div class="rule">
+            <hr />
+          </div>
+          
+          
+            <div class="boxholder">  <!--Begin div for box container -->
+              <div class="box1">
+                <p>
+                  Change Your Password
+                </p>
+                <div class="box1a">                
+                  <input type="checkbox" name="pwc" value="">
+                  &nbsp; If you know your password, but would like to change it, please check the box and login first.
+                </div>
+              </div>
+                
+              <div class="box2">
+                <p>
+                  Forgot Your Password?<br>
+                  <div class="box1a">                
+		   Please enter your EnterpriseID at the top of the page and then click the button below
+                </div>
+                </p>
+                <div class="box2a">
+      	          <INPUT type='submit' name='RESET_SQ_P' tabindex='4' value='Reset Your Password'>
+</INPUT>
+
+                </div>
+              </div> <!-- box2 -->
+            
+            </div> <!--End div for box container -->
+          
+          
+          
+          <div class="boxholder">  <!--Begin div for box container -->
+            <div class="box3">
+ 	            <p>
+ 	              Establish / Update Your Security Questions
+ 	            </p>
+ 	  
+              <input type="checkbox" name="usq" value="">
+              <div class="box3a">
+                &nbsp; If you know your password, and would like to update your security questions, please check the box and login.
+              </div>            
+ 	  
+       	    </div>
+      	  </div>
+              
+          <div class="rule">
+            <hr />
+          </div>
+          <div class="footer">
+            This page is being replaced with new technology. For information and replacement dates:  <a href="http://web.uillinois.edu/iam/SiteMinder">web.uillinois.edu/iam/CASiteMinder</a>.<br/><br/>
+            For access problems, questions, or comments, contact the AITS Service Desk at (217) 333-3102 (Urbana & UIS) or (312) 996-4806 (UIC). <br /> <br /> You can also e-mail the AITS Service Desk at <a href="mailto:servicedeskaits@uillinois.edu">servicedeskaits@uillinois.edu</a> <br /> <br /> Enterprise Authentication Service, Version 4.1.6
+						
+          </div>
+          
+          <div class="rule">
+            <hr />
+          </div>
+          
+          
+        </div> <!-- idfirstrow -->
+      </form>
+        
+      </div> <!-- End div for middle space -->
+    </div> <!-- End div for container -->
+
+  </body>
+
+
+</html>
+
+<script>
+function setFocus() {
+	var ftu = document.getElementById("firstTimeUser");
+	ftu.innerHTML = "<div class=\"ftbuttons\"><input type=\"button\" name=\"First Time Users\" value=\"First Time Users\" tabindex=\"4\" onClick=\"location='../servlet/FirstTimeUsers'\" /></div>";
+ 	document.easForm.inputEnterpriseId.focus();
+}
+
+</script>

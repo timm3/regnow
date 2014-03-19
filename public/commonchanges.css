@@ -1,0 +1,85 @@
+/*
+
+  FILE NAME..: commonchanges.css
+  RELEASE....: UI_9039_TWB80600
+  PRODUCT....: WTLWEB
+  DESCRIPTION: common customizations for all campuses
+
+AUDIT TRAIL: UI_9039_TWB70300_2         21-JAN-2009
+  1. transfered customizations from UI_web_defaultapp.css to return it to baseline
+
+AUDIT TRAIL: UI_9039_TWB80600           20-JUN-2013
+  1. set pageheaderlinks to float right, overriding changes introduced in 8.5.1
+     this replaces old local patch ui_p0195_twb80500 which reimplemented the 8.5 version of twbkfrm1.sql
+  
+*/
+  
+.embold {
+  FONT-WEIGHT: bold; 
+  COLOR: #CC3333; 
+  FONT-STYLE: italic;  
+}
+
+.em {
+  COLOR: #CC3333; 
+  FONT-STYLE: italic;  
+}
+
+.emnonitalic {
+  COLOR: #CC3333;   
+}
+
+.bold {
+  FONT-WEIGHT: bold;   
+}
+
+.underline {
+  text-decoration: underline;   
+}
+
+.pageheaderlinks2 {
+  color: #E3E5EE;
+}
+
+.fieldOrangetextbold {
+  color: #ff9900;
+}
+
+BODY {
+  background-image: url(/UI_images/top_body_border.gif);
+  background-repeat: repeat-x;
+}
+
+DIV.headerwrapperdiv {
+  background-image: url(/UI_images/header.gif);
+  background-repeat: no-repeat;
+  padding-top: 95px;
+  height: 95px;
+}
+
+DIV.pageheaderdiv1 {
+  display: none;
+}
+
+HR {
+  color: #003366;
+}
+
+TABLE.menuplaintable {
+  border-top: none;
+}
+
+.bg3 {
+  background-color: #003366
+}
+
+/* hide the Prefix field and field label from the Web for Prospects
+   data entry page (bwskwpro.P_WebProspectMain) */
+TABLE.dataentrytable td#prefix_id.delabel, TABLE.dataentrytable td.dedefault input#prefix_id {
+    display: none;
+}
+
+/* UI_9039_TWB80600 */
+.pageheaderlinks {
+  float: right;
+}

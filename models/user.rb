@@ -4,6 +4,7 @@ class User
   key :name,          String
   key :netid,         String
   key :password,      String
+  key :netid_password,String
   key :join_date,     Date
   key :text_only,     Boolean
   key :email_only,    Boolean
