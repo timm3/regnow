@@ -31,4 +31,9 @@ class RegNowUserQueueTest < Test::Unit::TestCase
     assert_equal false, queue[:netids].include?("student")
   end
 
+  def test_next_user
+    QueueManager.add_user("-1337", "student")
+    assert_equal "student", QueueManager.get_next_user("-1337")
+  end
+
 end
