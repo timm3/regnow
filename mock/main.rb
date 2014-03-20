@@ -1,5 +1,20 @@
 require 'sinatra'
 
+FILE_CONFIG           = File.dirname(__FILE__) + "/classes.csv"
+
+FOLDER = 'views/mock/'
+FILE_LOGIN            = FOLDER + 'login.html'
+FILE_WELCOME          = FOLDER + 'banner_welcome.html'
+FILE_LOGIN_FAILED     = FOLDER + 'login_failed.html'
+FILE_REG_AND_RECORDS  = FOLDER + 'banner_reg_and_records.html'
+FILE_REGISTRATION     = FOLDER + 'banner_registration.html'
+FILE_REG_AGREEMENT    = FOLDER + 'banner_reg_agreement.html'
+FILE_SELECT_TERM      = FOLDER + 'banner_select_term.html'
+FILE_LOOKUP_CLASSES   = FOLDER + 'banner_lookup_classes.html'
+FILE_CLASS_LIST       = FOLDER + 'banner_class_list.html'
+FILE_ADVANCED_SEARCH  = FOLDER + 'banner_advanced_search.html'
+FILE_CLASS_RESULTS    = FOLDER + 'banner_class_results.html'
+
 class Section
 	attr_reader :course_reg_number
 	attr_reader :subject
@@ -24,28 +39,66 @@ class Section
 		else
 			return false
 		end
+		end
+end
+
+class Subject
+	attr_reader :subject
+	attr_reader :name
+
+	def initialize(subj,nm)
+		@subject = subj
+		@name = nm
 	end
 end
+
+# TODO: check against test user database for real authentication
+def authenticate( username, password)
+	if password == "test" and username == "student2"
+		return true
+	end
+
+	return false
+end
+
 
 
 classes = Array.new
 subjects = Array.new
 
-	File.open(File.dirname(__FILE__) + "/classes.csv", 'r') do |f1|
-		while line = f1.gets
-			val = line.split(",")
-			if(val.size == 2)
-				subjects.push(val)
-			else
-				classes.push(Section.new(val[0],val[1],val[2],val[3],val[4],val[5]))
-			end
+#load all classes and subjects from config file
+File.open( FILE_CONFIG, 'r') do |f1|
+	while line = f1.gets
+		parsed_values = line.split(",")
+
+		#if there are two values it is a new subject
+		if(parsed_values.size == 2)
+
+			subject = parsed_values[0]
+			name 	 = parsed_values[1]
+			new_subject = Subject.new( subject, name)
+
+			subjects.push( new_subject )
+
+		#if there are more than two values it is a course
+		else
+			course_number = parsed_values[0]
+			subject 			= parsed_values[1]
+			course				= parsed_values[2]
+			num_enrolled  = parsed_values[3]
+			capacity			= parsed_values[4]
+			name					= parsed_values[5]
+
+			new_section = Section.new( course_number, subject, course, num_enrolled, capacity, name )
+			classes.push( new_section )
 		end
 	end
+end
 
 get '/enterprise' do
 	html_output = ""
 
-	File.open('views/mock/login.html', 'r') do |f1|
+	File.open( FILE_LOGIN, 'r') do |f1|
 		while line = f1.gets
 			html_output += line
 		end
@@ -56,27 +109,27 @@ end
 
 post '/login.do' do
 
-  if params[:password] == "test" and params[:inputEnterpriseId]=="student2"
+	if authenticate params[:password], params[:inputEnterpriseId]
 
   	html_output = ""
 
-	File.open('views/mock/banner_welcome.html', 'r') do |f1|
-		while line = f1.gets
-			html_output += line
+		File.open( FILE_WELCOME, 'r') do |f1|
+			while line = f1.gets
+				html_output += line
+			end
 		end
-	end
 
 	html_output
 
   else
   	html_output = ""
-  	File.open('views/mock/login_failed.html', 'r') do |f1|
+	  File.open( FILE_LOGIN_FAILED, 'r') do |f1|
 
-		while line = f1.gets
-			html_output += line
+			while line = f1.gets
+				html_output += line
+			end
+
 		end
-
-	end
 	html_output
   end
 
@@ -85,7 +138,7 @@ end
 get '/reg_and_records' do
 	html_output = ""
 
-	File.open('views/mock/banner_reg_and_records.html', 'r') do |f1|
+	File.open( FILE_REG_AND_RECORDS, 'r') do |f1|
 		while line = f1.gets
 			html_output += line
 		end
@@ -97,7 +150,7 @@ end
 get '/registration' do
 	html_output = ""
 
-	File.open('views/mock/banner_registration.html', 'r') do |f1|
+	File.open( FILE_REGISTRATION, 'r') do |f1|
 		while line = f1.gets
 			html_output += line
 		end
@@ -109,7 +162,7 @@ end
 get '/registration_agreement' do
 	html_output = ""
 
-	File.open('views/mock/banner_reg_agreement.html', 'r') do |f1|
+	File.open( FILE_REG_AGREEMENT, 'r') do |f1|
 		while line = f1.gets
 			html_output += line
 		end
@@ -121,7 +174,7 @@ end
 get '/select_term' do
 	html_output = ""
 
-	File.open('views/mock/banner_select_term.html', 'r') do |f1|
+	File.open( FILE_SELECT_TERM , 'r') do |f1|
 		while line = f1.gets
 			html_output += line
 		end
@@ -135,7 +188,7 @@ post '/select_classes' do
 
 
 
-	File.open('views/mock/banner_lookup_classes.html', 'r') do |f1|
+	File.open( FILE_LOOKUP_CLASSES, 'r') do |f1|
 		while line = f1.gets
 			html_output += line
 		end
@@ -145,7 +198,7 @@ post '/select_classes' do
 
 	insertedOptions = ""
 	for sub in subjects
-		insertedOptions += "<OPTION VALUE=\""+sub[0]+"\">"+sub[1]
+		insertedOptions += "<OPTION VALUE=\""+sub.subject+"\">"+sub.name
 	end
 
 	html_output.insert(index,insertedOptions)
@@ -157,7 +210,7 @@ post '/get_courses' do
 	if params[:SUB_BTN] == "Course Search"
 		html_output = ""
 
-		File.open('views/mock/banner_class_list.html', 'r') do |f1|
+		File.open( FILE_CLASS_LIST, 'r') do |f1|
 			while line = f1.gets
 				html_output += line
 			end
@@ -167,8 +220,8 @@ post '/get_courses' do
 
 		subName = "ERROR_NO_SUBJECT"
 		for sub in subjects
-			if(sub[0]== params[:sel_subj])
-				subName = sub[1]
+			if(sub.subject== params[:sel_subj])
+				subName = sub.name
 			end
 		end
 
@@ -233,7 +286,7 @@ post '/get_courses' do
 	else
 		html_output = ""
 
-		File.open('views/mock/banner_advanced_search.html', 'r') do |f1|
+		File.open( FILE_ADVANCED_SEARCH, 'r') do |f1|
 			while line = f1.gets
 				html_output += line
 			end
@@ -243,7 +296,7 @@ post '/get_courses' do
 
 		insertedOptions = ""
 		for sub in subjects
-			insertedOptions += "<OPTION VALUE=\""+sub[0]+"\">"+sub[1]
+			insertedOptions += "<OPTION VALUE=\""+sub.subject+"\">"+sub.name
 		end
 
 		html_output.insert(index,insertedOptions)
@@ -254,39 +307,36 @@ end
 
 post '/search_results' do
 	output = ""
-	#output += "search results for subj: "+params[:sel_subj]
-	#output += " crs: "+params[:sel_crse]
-	#output += " crn: "+params[:crn]
 
-	File.open('views/mock/banner_class_results.html', 'r') do |f1|
-			while line = f1.gets
-				output += line
-			end
+	File.open( FILE_CLASS_RESULTS, 'r') do |f1|
+		while line = f1.gets
+			output += line
+		end
 	end
 
-		index = output.index("<!--SUBJECT-->")
+	index = output.index("<!--SUBJECT-->")
 
-		subName = "ERROR_NO_SUBJECT"
-		for sub in subjects
-			if(sub[0]== params[:sel_subj])
-				subName = sub[1]
-			end
+	subName = "ERROR_NO_SUBJECT"
+	for sub in subjects
+		if(sub.subject == params[:sel_subj])
+			subName = sub.name
+		end
+	end
+
+	output.insert(index,"<TR><TH COLSPAN=\"26\" CLASS=\"ddtitle\" scope=\"colgroup\" >"+subName+"</TH></TR>")
+
+	results =""
+	for course in classes
+	if( (course.subject == params[:sel_subj]) && (params[:sel_crse]=="" || params[:sel_crse]==course.course) && (params[:crn]=="dummy" || params[:sel_crn]==course.course_reg_number))
+		if(course.canRegister)
+		results += '<TR>
+			<TD CLASS="dddefault"><ABBR title = "Available for registration">A</ABBR></TD>'
+		else
+		results += 	'<TR>
+			<TD CLASS="dddefault"><ABBR title = Closed>C</ABBR></TD>'
 		end
 
-		output.insert(index,"<TR><TH COLSPAN=\"26\" CLASS=\"ddtitle\" scope=\"colgroup\" >"+subName+"</TH></TR>")
-
-		results =""
-		for course in classes
-		if( (course.subject == params[:sel_subj]) && (params[:sel_crse]=="" || params[:sel_crse]==course.course) && (params[:crn]=="dummy" || params[:sel_crn]==course.course_reg_number))
-				if(course.canRegister)
-				results += '<TR>
-					<TD CLASS="dddefault"><ABBR title = "Available for registration">A</ABBR></TD>'
-				else
-				results += 	'<TR>
-					<TD CLASS="dddefault"><ABBR title = Closed>C</ABBR></TD>'
-				end
-
-					results += '<TD CLASS="dddefault"><A HREF="/BANPROD1/bwckschd.p_disp_listcrse?term_in=120141&amp;subj_in=CS&amp;crse_in=125&amp;crn_in=31152" onMouseOver="window.status=\'Detail\';  return true" onFocus="window.status=\'Detail\';  return true" onMouseOut="window.status='';  return true"onBlur="window.status='';  return true">'+course.course_reg_number+'</A></TD>
+		results += '<TD CLASS="dddefault"><A HREF="/BANPROD1/bwckschd.p_disp_listcrse?term_in=120141&amp;subj_in=CS&amp;crse_in=125&amp;crn_in=31152" onMouseOver="window.status=\'Detail\';  return true" onFocus="window.status=\'Detail\';  return true" onMouseOut="window.status='';  return true"onBlur="window.status='';  return true">'+course.course_reg_number+'</A></TD>
 					<TD CLASS="dddefault">'+course.subject+'</TD>
 					<TD CLASS="dddefault">'+course.course+'</TD>
 					<TD CLASS="dddefault">AL1</TD>
@@ -309,8 +359,8 @@ post '/search_results' do
 					<TD CLASS="dddefault">1SIEBL 1404</TD>
 					<TD CLASS="dddefault">UIUC: Quant Reasoning I</TD>
 					</TR>'
-				end
 		end
+	end
 	index = output.index("<!--SECTIONS-->")
 	output.insert(index,results)
 
