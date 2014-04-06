@@ -1,6 +1,8 @@
 require 'sinatra'
 
 FILE_CONFIG           = File.dirname(__FILE__) + "/classes.csv"
+FILE_USERS           = File.dirname(__FILE__) + "/users.csv"
+
 
 FOLDER = 'views/mock/'
 FILE_LOGIN            = FOLDER + 'login.html'
@@ -52,23 +54,37 @@ class Subject
 	end
 end
 
-# TODO: check against test user database for real authentication
-def authenticate( username, password)
-	if password == "test" and username == "student2"
-		return true
+class User
+	attr_reader :netid
+	attr_reader :password
+	attr_reader :crns
+
+	def initialize(id,pass)
+		@netid = id
+		@password = pass
+		@crns = Array.new
 	end
 
-	return false
+	def add_class(crn)
+		@crns.push(crn)
+	end
+
 end
 
 
 
 classes = Array.new
 subjects = Array.new
+users = Array.new
+
+current_user = nil
+
 
 #load all classes and subjects from config file
 File.open( FILE_CONFIG, 'r') do |f1|
 	while line = f1.gets
+		line.delete! "\n"
+
 		parsed_values = line.split(",")
 
 		#if there are two values it is a new subject
@@ -95,6 +111,32 @@ File.open( FILE_CONFIG, 'r') do |f1|
 	end
 end
 
+#load all users with their passwords and what CRNs they're registered for
+File.open( FILE_USERS, 'r') do |f1|
+	while line = f1.gets
+		line.delete! "\n"
+
+		parsed_values = line.split(",")
+
+
+		id = parsed_values[0]
+		pass = parsed_values[1]
+
+		new_user = User.new( id, pass)
+
+
+		#if there are more than two values, the third+ values are CRNs
+		if(parsed_values.size > 2)
+			for i in 2..(parsed_values.size-1)
+				new_user.add_class(parsed_values[i])
+			end
+		end
+
+		users.push( new_user )
+		puts new_user.netid+" '"+new_user.password+"'"
+	end
+end
+
 get '/enterprise' do
 	html_output = ""
 
@@ -109,7 +151,17 @@ end
 
 post '/login.do' do
 
-	if authenticate params[:password], params[:inputEnterpriseId]
+	authenticated = false
+
+	for user in users
+		if ( user.netid == params[:inputEnterpriseId] and user.password == params[:password] )
+			current_user = user
+			authenticated = true
+			break
+		end
+	end
+
+	if authenticated
 
   	html_output = ""
 
