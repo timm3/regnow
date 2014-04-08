@@ -16,6 +16,7 @@ FILE_LOOKUP_CLASSES   = FOLDER + 'banner_lookup_classes.html'
 FILE_CLASS_LIST       = FOLDER + 'banner_class_list.html'
 FILE_ADVANCED_SEARCH  = FOLDER + 'banner_advanced_search.html'
 FILE_CLASS_RESULTS    = FOLDER + 'banner_class_results.html'
+FILE_ADD_DROP_CLASSES = FOLDER + 'banner_add_drop_classes.html'
 
 class Section
 	attr_reader :course_reg_number
@@ -69,15 +70,32 @@ class User
 		@crns.push(crn)
 	end
 
+	def canRegister(crn,classes)
+		if( classExists(crn,classes) )
+
+			for sec in @crns
+				if(sec==crn)
+					return false
+				end
+			end
+
+			return true
+		end
+
+		return false
+	end
+
 end
-
-
 
 classes = Array.new
 subjects = Array.new
 users = Array.new
 
 current_user = nil
+
+
+
+
 
 
 #load all classes and subjects from config file
@@ -109,6 +127,16 @@ File.open( FILE_CONFIG, 'r') do |f1|
 			classes.push( new_section )
 		end
 	end
+end
+
+def classExists(crn,classes)
+	for section in classes
+			if(section.course_reg_number==crn)
+				return true
+			end
+	end
+
+	return false
 end
 
 #load all users with their passwords and what CRNs they're registered for
@@ -417,4 +445,256 @@ post '/search_results' do
 	output.insert(index,results)
 
 	output
+end
+
+get '/add_drop_classes' do
+	html_output = ""
+
+	File.open( FILE_ADD_DROP_CLASSES, 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
+
+	if( current_user != nil && current_user.crns.size > 0 )
+		table_start = '<h3>Current Schedule</h3>
+		<table class="datadisplaytable" summary="Current Schedule">
+		<tbody><tr>
+		<th class="ddheader" scope="col">Status</th>
+		<th class="ddheader" scope="col">Action</th>
+		<th class="ddheader" scope="col"><acronym title="Course Reference Number">CRN</acronym></th>
+		<th class="ddheader" scope="col"><abbr title="Subject">Subj</abbr></th>
+		<th class="ddheader" scope="col"><abbr title="Course">Crse</abbr></th>
+		<th class="ddheader" scope="col"><abbr title="Section">Sec</abbr></th>
+		<th class="ddheader" scope="col">Level</th>
+		<th class="ddheader" scope="col"><abbr title="Credit Hours">Cred</abbr></th>
+		<th class="ddheader" scope="col">Grade Mode</th>
+		<th class="ddheader" scope="col">Title</th>
+		</tr>'
+
+		table_end = '</tbody></table><br>'
+
+		table_schedule = '<table class="plaintable" summary="Schedule Summary">
+		<tbody><tr>
+		<td class="pldefault">Total Credit Hours: </td>
+		<td class="pldefault">    3.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Billing Hours:</td>
+		<td class="pldefault">    3.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Minimum Hours:</td>
+		<td class="pldefault">     12.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Maximum Hours:</td>
+		<td class="pldefault">     18.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Date:</td>
+		<td class="pldefault">Apr 08, 2014 09:18 am</td>
+		</tr>
+		</tbody></table>
+		<br>'
+
+
+		index = html_output.index("<!--CURRENT_SCHEDULE-->")
+
+		inserted = ""
+
+		inserted += table_start
+
+		for crn in current_user.crns
+			inserted += '<tr>
+				<td class="dddefault"><input type="hidden" name="MESG" value="DUMMY">**Web Registered** on Apr 08, 2014</td>
+				<td class="dddefault">
+				<label for="action_id1"><span class="fieldlabeltextinvisible">Action</span></label>
+				<select name="RSTS_IN" size="1" id="action_id1">
+				<option value="" selected="">None
+				</option><option value="DW">Web Drop Course
+				</option></select>
+				</td>
+				<td class="dddefault"><input type="hidden" name="assoc_term_in" value="120148"><input type="hidden" name="CRN_IN" value="'+crn+'">'+crn+'<input type="hidden" name="start_date_in" value="08/25/2014"><input type="hidden" name="end_date_in" value="12/10/2014"></td>
+				<td class="dddefault"><input type="hidden" name="SUBJ" value="SUBJ">SUBJ</td>
+				<td class="dddefault"><input type="hidden" name="CRSE" value="101">101</td>
+				<td class="dddefault"><input type="hidden" name="SEC" value="Q3">Q3</td>
+				<td class="dddefault"><input type="hidden" name="LEVL" value="Undergrad - Urbana-Champaign">Undergrad - Urbana-Champaign</td>
+				<td class="dddefault"><input type="hidden" name="CRED" value="    3.000">    3.000</td>
+				<td class="dddefault"><input type="hidden" name="GMOD" value="Standard Letter">Standard Letter</td>
+				<td class="dddefault"><input type="hidden" name="TITLE" value="CLASS NAME">CLASS NAME</td>
+				</tr>'
+		end
+
+		inserted += table_end
+		inserted += table_schedule
+
+		html_output.insert(index,inserted)
+	end
+
+
+
+	html_output
+end
+
+post '/add_drop_classes' do
+
+	html_output = ""
+
+	error_crns = Array.new
+
+	#if( params[:SUB_BTN] == "Submit Changes")
+		for crn in [ params[:CRN_IN1], params[:CRN_IN2], params[:CRN_IN3], params[:CRN_IN4], params[:CRN_IN5] , params[:CRN_IN6] , params[:CRN_IN7] , params[:CRN_IN8], params[:CRN_IN9] , params[:CRN_IN10]     ]
+			if(crn!="")
+				puts crn
+
+				if(current_user.canRegister(crn,classes))
+					current_user.add_class(crn)
+				else
+					error_crns.push(crn)
+				end
+
+
+			end
+		end
+	#end
+
+
+	File.open( FILE_ADD_DROP_CLASSES, 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
+
+	if( error_crns.size > 0)
+		error_start= '<table class="plaintable" summary="This layout table holds message information">
+			<tbody><tr>
+			<td class="pldefault">
+
+			</td>
+			<td class="pldefault">
+			<span class="errortext">Registration Add Errors</span>
+			<br>
+			</td>
+			</tr>
+			</tbody></table>
+			<table class="datadisplaytable" summary="This layout table is used to present Registration Errors.">
+			<tbody><tr>
+			<th class="ddheader" scope="col">Status</th>
+			<th class="ddheader" scope="col"><acronym title="Course Reference Number">CRN</acronym></th>
+			<th class="ddheader" scope="col"><abbr title="Subject">Subj</abbr></th>
+			<th class="ddheader" scope="col"><abbr title="Course">Crse</abbr></th>
+			<th class="ddheader" scope="col"><abbr title="Section">Sec</abbr></th>
+			<th class="ddheader" scope="col">Level</th>
+			<th class="ddheader" scope="col"><abbr title="Credit Hours">Cred</abbr></th>
+			<th class="ddheader" scope="col">Grade Mode</th>
+			<th class="ddheader" scope="col">Title</th>
+			</tr>'
+
+		error_end = '<tbody></table><br>'
+
+		index = html_output.index("<!--REGISTRATION_ERRORS-->")
+		inserted = ""
+
+		inserted += error_start
+
+		for crn in error_crns
+			inserted += '
+			<tr>
+			<td class="dddefault">ERROR MESSAGE</td>
+			<td class="dddefault">'+crn+'</td>
+			<td class="dddefault">SUBJ</td>
+			<td class="dddefault">101</td>
+			<td class="dddefault">A</td>
+			<td class="dddefault">Undergrad - Urbana-Champaign</td>
+			<td class="dddefault">    0.000</td>
+			<td class="dddefault">Standard Letter DFR - UIUC</td>
+			<td class="dddefault">NAME</td>
+			</tr>'
+		end
+
+		inserted += error_end
+		html_output.insert(index,inserted)
+	end
+
+	if( current_user != nil && current_user.crns.size > 0 )
+		table_start = '<h3>Current Schedule</h3>
+		<table class="datadisplaytable" summary="Current Schedule">
+		<tbody><tr>
+		<th class="ddheader" scope="col">Status</th>
+		<th class="ddheader" scope="col">Action</th>
+		<th class="ddheader" scope="col"><acronym title="Course Reference Number">CRN</acronym></th>
+		<th class="ddheader" scope="col"><abbr title="Subject">Subj</abbr></th>
+		<th class="ddheader" scope="col"><abbr title="Course">Crse</abbr></th>
+		<th class="ddheader" scope="col"><abbr title="Section">Sec</abbr></th>
+		<th class="ddheader" scope="col">Level</th>
+		<th class="ddheader" scope="col"><abbr title="Credit Hours">Cred</abbr></th>
+		<th class="ddheader" scope="col">Grade Mode</th>
+		<th class="ddheader" scope="col">Title</th>
+		</tr>'
+
+		table_end = '</tbody></table><br>'
+
+		table_schedule = '<table class="plaintable" summary="Schedule Summary">
+		<tbody><tr>
+		<td class="pldefault">Total Credit Hours: </td>
+		<td class="pldefault">    3.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Billing Hours:</td>
+		<td class="pldefault">    3.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Minimum Hours:</td>
+		<td class="pldefault">     12.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Maximum Hours:</td>
+		<td class="pldefault">     18.000</td>
+		</tr>
+		<tr>
+		<td class="pldefault">Date:</td>
+		<td class="pldefault">Apr 08, 2014 09:18 am</td>
+		</tr>
+		</tbody></table>
+		<br>'
+
+
+		index = html_output.index("<!--CURRENT_SCHEDULE-->")
+
+		inserted = ""
+
+		inserted += table_start
+
+		for crn in current_user.crns
+			inserted += '<tr>
+				<td class="dddefault"><input type="hidden" name="MESG" value="DUMMY">**Web Registered** on Apr 08, 2014</td>
+				<td class="dddefault">
+				<label for="action_id1"><span class="fieldlabeltextinvisible">Action</span></label>
+				<select name="RSTS_IN" size="1" id="action_id1">
+				<option value="" selected="">None
+				</option><option value="DW">Web Drop Course
+				</option></select>
+				</td>
+				<td class="dddefault"><input type="hidden" name="assoc_term_in" value="120148"><input type="hidden" name="CRN_IN" value="'+crn+'">'+crn+'<input type="hidden" name="start_date_in" value="08/25/2014"><input type="hidden" name="end_date_in" value="12/10/2014"></td>
+				<td class="dddefault"><input type="hidden" name="SUBJ" value="SUBJ">SUBJ</td>
+				<td class="dddefault"><input type="hidden" name="CRSE" value="101">101</td>
+				<td class="dddefault"><input type="hidden" name="SEC" value="Q3">Q3</td>
+				<td class="dddefault"><input type="hidden" name="LEVL" value="Undergrad - Urbana-Champaign">Undergrad - Urbana-Champaign</td>
+				<td class="dddefault"><input type="hidden" name="CRED" value="    3.000">    3.000</td>
+				<td class="dddefault"><input type="hidden" name="GMOD" value="Standard Letter">Standard Letter</td>
+				<td class="dddefault"><input type="hidden" name="TITLE" value="CLASS NAME">CLASS NAME</td>
+				</tr>'
+		end
+
+		inserted += table_end
+		inserted += table_schedule
+
+		html_output.insert(index,inserted)
+	end
+
+
+
+	html_output
+
 end
