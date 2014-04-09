@@ -11,6 +11,4 @@ class Course
   key :description,    String
   key :code,           String
   key :course_id,      String
-  #key :total_slots    Integer
-  #key :open_slots     Integer
 end

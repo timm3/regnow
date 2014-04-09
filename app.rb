@@ -2,6 +2,8 @@ require 'sinatra'
 require 'mongo_mapper'
 
 class RegNow < Sinatra::Application
+  $regnow_bot = CourseManager.new
+
   configure do
     set :bind, '0.0.0.0'
     set :server, "puma"
@@ -16,7 +18,7 @@ end
 
 Thread.new do # TODO: process course search queue
   while true do
-     sleep 60
+     update_queues
   end
 end
 
