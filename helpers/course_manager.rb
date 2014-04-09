@@ -16,25 +16,25 @@ class CourseManager
 
   # log into self-service and chooses latest semester term
   def login
-    page = @bot.get(@login_url)  
+    page = @bot.get(@login_url)
     login_form = page.form('easForm')
     login_form.inputEnterpriseId = @netid
     login_form.password = @password
-    sleep 1
+    sleep Registration.human_delay
     page = @bot.submit(login_form, login_form.button_with(:value => 'Login'))
   end
 
   def choose_latest_semester
-    sleep 1
+    sleep Registration.human_delay
     page = @bot.get(@select_term_url)
     term_form = page.form_with(:action => '/BANPROD1/bwckgens.p_proc_term_date')
     term_form.field_with(:name => 'p_term').options[1].select # Select Spring 2014 (latest) semester
-    sleep 1
+    sleep Registration.human_delay
     page = @bot.submit(term_form, term_form.button_with(:value => 'Submit'))
   end
 
   def logout
-    sleep 1
+    sleep Registration.human_delay
     page = @bot.get(@logout_url)
     logout_form = page.form_with(:action => 'logout.do')
     #pp page

@@ -30,15 +30,21 @@ module DatabaseManager
     return false
   end
 
-  def DatabaseManager.add_user( name, netid, password, netid_password,
-                                  join_date, text_only, email_only,
-                                  number, crns)
+  def DatabaseManager.add_user(name="", netid="", password="",
+                                  netid_password="", join_date="",
+                                  text_only=false, email_only=false,
+                                  number=0, crns=[])
     user = User.create( :name => name, :netid => netid, :password => password,
                         :netid_password => netid_password,
                         :join_date => join_date, :text_only => text_only,
                         :email_only => email_only , :number => number,
                         :crns => crns)
     user.save
+  end
+
+  def DatabaseManager.retrieve_netid_password(netid)
+    user = User.first(:netid => netid)
+    return user[:netid_password]
   end
 
   def DatabaseManager.remove_user(net_id)

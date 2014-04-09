@@ -10,6 +10,11 @@ module QueueManager
     return queue
   end
 
+  def QueueManager.select_queue
+    queue = UserQueue.first(:order => :crn.asc))
+    return queue
+  end
+
   def QueueManager.add_user(crn, netid)
     queue = UserQueue.first(:crn => crn)
     if queue == nil
