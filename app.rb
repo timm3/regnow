@@ -1,5 +1,12 @@
 require 'sinatra'
 require 'mongo_mapper'
+require 'securerandom'
+
+require_relative 'helpers/init'
+require_relative 'models/init'
+require_relative 'routes/init'
+require_relative 'config/db'
+require_relative 'mock/main'
 
 class RegNow < Sinatra::Application
   $regnow_bot = CourseManager.new
@@ -22,9 +29,3 @@ Thread.new do # TODO: process course search queue
      Registration.update_queues
   end
 end
-
-require_relative 'helpers/init'
-require_relative 'models/init'
-require_relative 'routes/init'
-require_relative 'config/db'
-require_relative 'mock/main'

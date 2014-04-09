@@ -55,7 +55,7 @@ class Subject
 	end
 end
 
-class User
+class MockUser
 	attr_reader :netid
 	attr_reader :password
 	attr_reader :crns
@@ -150,7 +150,7 @@ File.open( FILE_USERS, 'r') do |f1|
 		id = parsed_values[0]
 		pass = parsed_values[1]
 
-		new_user = User.new( id, pass)
+		new_user = MockUser.new( id, pass)
 
 
 		#if there are more than two values, the third+ values are CRNs

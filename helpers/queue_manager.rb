@@ -11,7 +11,7 @@ module QueueManager
   end
 
   def QueueManager.select_queue
-    queue = UserQueue.first(:order => :crn.asc))
+    queue = UserQueue.first(:order => :crn.asc)
     return queue
   end
 
@@ -34,6 +34,7 @@ module QueueManager
       return false
     end
     if queue.netids.delete(netid) == nil
+      queue.save
       return false
     else
       queue.save

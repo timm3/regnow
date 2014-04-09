@@ -1,12 +1,15 @@
 require '../app'
 require 'test/unit'
 require 'rack/test'
+require 'securerandom'
 
 class RegNowUserQueueTest < Test::Unit::TestCase
 
-  def initialize
-    @crn = rand(-1000..-1).to_s
-    @netid = SecureRandom.hex
+  class << self
+    def setup
+      @crn = rand(-1000..-1).to_s
+      @netid = SecureRandom.hex
+    end
   end
 
   def setup
@@ -19,7 +22,7 @@ class RegNowUserQueueTest < Test::Unit::TestCase
 
   def test_create_queue
     #queue = UserQueue.create(:crn => "-1337", :netids => [])
-    queue = UserQueue.first(:crn => crn)
+    queue = UserQueue.first(:crn => @crn)
     assert_not_nil queue
   end
 
@@ -38,7 +41,7 @@ class RegNowUserQueueTest < Test::Unit::TestCase
 
   def test_next_user
     QueueManager.add_user(@crn, @netid)
-    assert_equal "student", QueueManager.get_next_user(@crn)
+    assert_equal @netid, QueueManager.get_next_user(@crn)
   end
 
 end
