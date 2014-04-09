@@ -1,7 +1,12 @@
 module DatabaseManager
 
-  def DatabaseManager.add_course(name, crns, code, instructor)
-    course = Course.create(:name => name, :crns => crns, :code => code, :instructor => instructor)
+  def DatabaseManager.add_course(title="", credit_hours=0, term="",
+                                  subject="", year="", crns=[], description="",
+                                  code="", course_id="")
+    course = Course.create(:title => title, :credit_hours => credit_hours,
+                            :term => term, :subject => subject, :year => year,
+                            :crns => crns, :description => description,
+                            :code => code, :course_id => course_id)
     course.save
   end
 
@@ -25,10 +30,14 @@ module DatabaseManager
     return false
   end
 
-  def DatabaseManager.add_user( name, netid, password, netid_password, join_date, text_only, email_only, number, crns)
+  def DatabaseManager.add_user( name, netid, password, netid_password,
+                                  join_date, text_only, email_only,
+                                  number, crns)
     user = User.create( :name => name, :netid => netid, :password => password,
-                        :netid_password => netid_password, :join_date => join_date, :text_only => text_only,
-                        :email_only => email_only , :number => number, :crns => crns)
+                        :netid_password => netid_password,
+                        :join_date => join_date, :text_only => text_only,
+                        :email_only => email_only , :number => number,
+                        :crns => crns)
     user.save
   end
 
