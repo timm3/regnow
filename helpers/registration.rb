@@ -9,6 +9,7 @@ module Registration
   # users from queues if spots are open
   # TODO: implement timeouts for all bot action
   # TODO: implement email-only notification triggering
+  # TODO: implement pool of backend threads
   def Registration.update_queues
     sleep Registration.human_delay
     current_queue = QueueManager.select_queue
@@ -30,6 +31,5 @@ module Registration
       end
     end
   end
-
 
 end

@@ -16,9 +16,10 @@ class RegNow < Sinatra::Application
   end
 end
 
+threads = RegNowThreads.new(5)
 Thread.new do # TODO: process course search queue
   while true do
-     update_queues
+     Registration.update_queues
   end
 end
 
