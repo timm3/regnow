@@ -17,6 +17,7 @@ FILE_CLASS_LIST       = FOLDER + 'banner_class_list.html'
 FILE_ADVANCED_SEARCH  = FOLDER + 'banner_advanced_search.html'
 FILE_CLASS_RESULTS    = FOLDER + 'banner_class_results.html'
 FILE_ADD_DROP_CLASSES = FOLDER + 'banner_add_drop_classes.html'
+FILE_DETAILED				 = FOLDER + 'banner_detailed.html'
 
 class Section
 	attr_reader :course_reg_number
@@ -137,6 +138,16 @@ def classExists(crn,classes)
 	end
 
 	return false
+end
+
+def getSection(crn,classes)
+	for section in classes
+			if(section.course_reg_number==crn)
+				return section
+			end
+	end
+
+	return nil
 end
 
 #load all users with their passwords and what CRNs they're registered for
@@ -697,4 +708,49 @@ post '/add_drop_classes' do
 
 	html_output
 
+end
+
+get '/detailed' do
+	html_output = ""
+
+	crn = params[:crn_in]
+	if(classExists(crn,classes))
+		section = getSection(crn,classes)
+
+		File.open( FILE_DETAILED, 'r') do |f1|
+			while line = f1.gets
+				html_output += line
+			end
+		end
+
+
+		index = html_output.index("<!--CRN-->")
+		html_output.insert(index,section.course_reg_number)
+
+		index = html_output.index("<!--SUBJ-->")
+		html_output.insert(index,section.subject)
+
+		index = html_output.index("<!--COURSE-->")
+		html_output.insert(index,section.course)
+
+		index = html_output.index("<!--CAPACITY-->")
+		html_output.insert(index,section.capacity)
+
+		index = html_output.index("<!--ACTUAL-->")
+		html_output.insert(index,section.num_enrolled)
+
+		index = html_output.index("<!--REMAINING-->")
+		html_output.insert(index,(section.capacity.to_i-section.num_enrolled.to_i).to_s)
+
+	else
+		html_output = "error crn not found. (proper url: detailed?crn_in=12345 )"
+	end
+
+
+
+
+
+
+
+	html_output
 end
