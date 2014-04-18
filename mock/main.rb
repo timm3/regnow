@@ -6,6 +6,8 @@ FILE_USERS           = File.dirname(__FILE__) + "/users.csv"
 
 FOLDER = 'views/mock/'
 FILE_LOGIN            = FOLDER + 'login.html'
+FILE_LOGOUT           = FOLDER + 'banner_logout.html'
+FILE_LOGOUTDO         = FOLDER + 'banner_logoutdo.html'
 FILE_WELCOME          = FOLDER + 'banner_welcome.html'
 FILE_LOGIN_FAILED     = FOLDER + 'login_failed.html'
 FILE_REG_AND_RECORDS  = FOLDER + 'banner_reg_and_records.html'
@@ -172,7 +174,6 @@ File.open( FILE_USERS, 'r') do |f1|
 		end
 
 		users.push( new_user )
-		puts new_user.netid+" '"+new_user.password+"'"
 	end
 end
 
@@ -188,6 +189,38 @@ get '/enterprise' do
 	html_output
 end
 
+get '/twbkwbis.P_Logout' do
+	html_output = ""
+
+	File.open( FILE_LOGOUT, 'r') do |f1|
+		while line = f1.gets
+			html_output += line
+		end
+	end
+
+	html_output
+end
+
+post '/logout.do' do
+
+	if( params[:BTN_YES] == 'Yes')
+		html_output = ""
+
+		File.open( FILE_LOGOUTDO, 'r') do |f1|
+			while line = f1.gets
+				html_output += line
+			end
+		end
+
+		puts "LOGGED OUT: "+current_user.netid
+		current_user = nil
+
+		html_output
+	end
+
+
+end
+
 post '/login.do' do
 
 	authenticated = false
@@ -195,6 +228,8 @@ post '/login.do' do
 	for user in users
 		if ( user.netid == params[:inputEnterpriseId] and user.password == params[:password] )
 			current_user = user
+			puts "LOGGED IN: "+current_user.netid
+
 			authenticated = true
 			break
 		end
@@ -561,8 +596,12 @@ post '/add_drop_classes' do
 
 				if(current_user.canRegister(crn,classes))
 					current_user.add_class(crn)
+					puts "REGISTERED FOR CRN '" + crn + "' (netid: '" + current_user.netid + "')"
+
 				else
 					error_crns.push(crn)
+					puts "FAILED TO REGISTER FOR CRN '" + crn + "' (netid: '" + current_user.netid + "')"
+
 				end
 
 
