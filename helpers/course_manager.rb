@@ -1,16 +1,28 @@
 require 'mechanize'
 require_relative 'database_manager'
 
+TEST_MODE = true
+
 class CourseManager
 
   def initialize(netid=$netid, password=$password)
     @netid = netid
     @password = password # TODO: decrypt later
+
     @login_url = 'https://eas.admin.uillinois.edu/eas/servlet/EasLogin?redirect=https://webprod.admin.uillinois.edu/ssa/servlet/SelfServiceLogin?appName=edu.uillinois.aits.SelfServiceLogin&dad=BANPROD1'
     @logout_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/twbkwbis.P_Logout'
     @select_term_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfcls.p_sel_crse_search'
     @current_term_crn = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwckschd.p_disp_detail_sched?term_in=120141&crn_in='
     @add_course_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfreg.P_AltPin'
+
+    if( TEST_MODE )
+      @login_url = 'http://localhost:4567/enterprise'
+      @logout_url = 'http://localhost:4567/logout.do'
+      @select_term_url = 'http://localhost:4567/select_term'
+      @current_term_crn = 'http://localhost:4567/detailed?crn_in='
+      @add_course_url = 'http://localhost:4567/add_drop_classes'
+    end
+
     @bot = Mechanize.new
   end
 
