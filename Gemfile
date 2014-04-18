@@ -11,4 +11,4 @@ gem 'nokogiri'
 gem 'mechanize'
 gem 'twilio-ruby'
 gem 'pony'
-
+gem 'json'

@@ -16,6 +16,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.6.9)
+    json (1.8.1)
     jwt (0.1.11)
       multi_json (>= 1.5)
     mail (2.2.7)
@@ -80,6 +81,7 @@ PLATFORMS
 
 DEPENDENCIES
   bson_ext
+  json
   mechanize
   minitest (~> 4.7)
   mongo
