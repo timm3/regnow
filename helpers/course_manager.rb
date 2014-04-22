@@ -20,7 +20,7 @@ class CourseManager
 
     if( TEST_MODE )
       @login_url = 'http://localhost:4567/enterprise'
-      @logout_url = 'http://localhost:4567/logout.do'
+      @logout_url = 'http://localhost:4567/twbkwbis.P_Logout'
       @select_term_url = 'http://localhost:4567/select_term'
       @current_term_crn = 'http://localhost:4567/detailed?crn_in='
       @add_course_url = 'http://localhost:4567/add_drop_classes'
@@ -56,8 +56,8 @@ class CourseManager
     page = @bot.get(@logout_url)
     logout_form = page.form_with(:action => 'logout.do')
     #pp page
-    #sleep 1
-    #page = @bot.submit(logout_form, logout_form.button_with(:value => 'Yes'))
+    sleep Registration.human_delay
+    page = @bot.submit(logout_form, logout_form.button_with(:value => 'Yes'))
   end
 
   def get_open_spots(crn)
@@ -112,12 +112,12 @@ class CourseManager
     #if there are any add errors, return false
     if( page.search('span.errortext').length > 0 )
       #TODO: logout
-      #logout
+      logout
       return false
     end
 
     #TODO: this is generating an error in tests for some reason
-    #logout
+    logout
 
     return true
   end
