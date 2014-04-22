@@ -588,26 +588,27 @@ post '/add_drop_classes' do
 	html_output = ""
 
 	error_crns = Array.new
+	add_crns = Array.new
 
-	#if( params[:SUB_BTN] == "Submit Changes")
-		for crn in [ params[:CRN_IN1], params[:CRN_IN2], params[:CRN_IN3], params[:CRN_IN4], params[:CRN_IN5] , params[:CRN_IN6] , params[:CRN_IN7] , params[:CRN_IN8], params[:CRN_IN9] , params[:CRN_IN10]     ]
-			if(crn!="")
-				puts crn
 
+	for crn in [ params[:CRN_IN1], params[:CRN_IN2], params[:CRN_IN3], params[:CRN_IN4], params[:CRN_IN5] , params[:CRN_IN6] , params[:CRN_IN7] , params[:CRN_IN8], params[:CRN_IN9] , params[:CRN_IN10]     ]
+		if(crn!="")
 				if(current_user.canRegister(crn,classes))
-					current_user.add_class(crn)
+					add_crns.push(crn)
 					puts "REGISTERED FOR CRN '" + crn + "' (netid: '" + current_user.netid + "')"
-
 				else
 					error_crns.push(crn)
 					puts "FAILED TO REGISTER FOR CRN '" + crn + "' (netid: '" + current_user.netid + "')"
-
 				end
 
-
-			end
 		end
-	#end
+	end
+
+	if(error_crns.size == 0)
+		for crn in add_crns
+			current_user.add_class(crn)
+		end
+	end
 
 
 	File.open( FILE_ADD_DROP_CLASSES, 'r') do |f1|

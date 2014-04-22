@@ -1,8 +1,8 @@
 module Registration
 
-  # random value between 3-15
+  # random value between 2-6
   def Registration.human_delay
-    return rand(3..15)
+    return 2+rand(5)
   end
 
   # one iteration of updating all classes available and registering

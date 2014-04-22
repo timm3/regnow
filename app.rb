@@ -21,6 +21,40 @@ class RegNow < Sinatra::Application
   helpers do
     include Rack::Utils
   end
+
+end
+
+def auto_register( netid, crn_str)
+  output = ""
+
+  if netid == nil || crn_str == nil
+    output = "error with input"
+  else
+    crn_list = crn_str.split(",")
+
+    output += "Netid :"+ netid + " CRNs: "
+
+    #TODO validate netid, add user with this netid to queue
+
+    for crn in crn_list
+      output += crn + " "
+    end
+  end
+  output
+end
+
+get "/register" do
+  netid = params[:netid]
+  crn_str = params[:crns]
+
+  auto_register netid, crn_str
+end
+
+post "/register" do
+  netid = params[:netid]
+  crn_str = params[:crns]
+
+  auto_register netid, crn_str
 end
 
 threads = RegNowThreads.new(5)

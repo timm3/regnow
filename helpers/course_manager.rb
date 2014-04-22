@@ -15,12 +15,18 @@ class CourseManager
     @current_term_crn = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwckschd.p_disp_detail_sched?term_in=120141&crn_in='
     @add_course_url = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwskfreg.P_AltPin'
 
+    @select_term_action = '/BANPROD1/bwckgens.p_proc_term_date'
+    @add_course_form_action = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwckcoms.P_Regs'
+
     if( TEST_MODE )
       @login_url = 'http://localhost:4567/enterprise'
       @logout_url = 'http://localhost:4567/logout.do'
       @select_term_url = 'http://localhost:4567/select_term'
       @current_term_crn = 'http://localhost:4567/detailed?crn_in='
       @add_course_url = 'http://localhost:4567/add_drop_classes'
+
+      @select_term_action = '/select_classes'
+      @add_course_form_action = 'add_drop_classes'
     end
 
     @bot = Mechanize.new
@@ -39,7 +45,7 @@ class CourseManager
   def choose_latest_semester
     sleep Registration.human_delay
     page = @bot.get(@select_term_url)
-    term_form = page.form_with(:action => '/BANPROD1/bwckgens.p_proc_term_date')
+    term_form = page.form_with(:action => @select_term_action)
     term_form.field_with(:name => 'p_term').options[1].select # Select Spring 2014 (latest) semester
     sleep Registration.human_delay
     page = @bot.submit(term_form, term_form.button_with(:value => 'Submit'))
@@ -79,17 +85,39 @@ class CourseManager
     return total_seats.to_i
   end
 
-  def register_course(crn)
-    if !DatabaseManager.check_crn(crn)
-      return false
-    end
+  def register_crn_list(crn_list)
+
+    #TODO figure out how to check that CRN exists for testing
+
+    #for crn in crn_list
+    #  if !DatabaseManager.check_crn(crn)
+    #    return false
+    #  end
+    #end
+
     login
     choose_latest_semester
     page = @bot.get(@add_course_url)
 
-    # TODO: submit CRN add whenever summer registration starts
+    add_form = page.form_with(:action => @add_course_form_action)
 
-    logout
+    #add each crn to form
+    for i in 0..crn_list.length
+      add_form.field_with(:dom_id => ('crn_id'+((i+1).to_s()) ) ).value = crn_list[i]
+    end
+
+    sleep Registration.human_delay
+    page = @bot.submit(add_form, add_form.button_with(:value => 'Submit Changes'))
+
+    #if there are any add errors, return false
+    if( page.search('span.errortext').length > 0 )
+      #TODO: logout
+      #logout
+      return false
+    end
+
+    #TODO: this is generating an error in tests for some reason
+    #logout
 
     return true
   end
