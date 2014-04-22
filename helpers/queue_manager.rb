@@ -1,12 +1,12 @@
 module QueueManager
 
-  def QueueManager.create_queue(crn)
-    queue = UserQueue.create(:crn => crn, :netids => [])
+  def QueueManager.create_queue(crn_list)
+    queue = UserQueue.create(:crn => crn_list.asc, :netids => [])
     queue.save
   end
 
-  def QueueManager.get_queue(crn)
-    queue = UserQueue.first(:crn => crn)
+  def QueueManager.get_queue(crn_list)
+    queue = UserQueue.first(:crn => crn_list.asc)
     return queue
   end
 
@@ -15,10 +15,10 @@ module QueueManager
     return queue
   end
 
-  def QueueManager.add_user(crn, netid)
-    queue = UserQueue.first(:crn => crn)
+  def QueueManager.add_user(crn_list, netid)
+    queue = UserQueue.first(:crn => crn_list.asc)
     if queue == nil
-      queue = QueueManager.create_queue(crn)
+      queue = QueueManager.create_queue(crn_list)
     end
     if !queue[:netids].include?(netid)
       queue[:netids] << netid
@@ -28,8 +28,8 @@ module QueueManager
     return false
   end
 
-  def QueueManager.remove_user(crn, netid)
-    queue = UserQueue.first(:crn => crn)
+  def QueueManager.remove_user(crn_list, netid)
+    queue = UserQueue.first(:crn => crn_list.asc)
     if queue == nil
       return false
     end
@@ -42,8 +42,8 @@ module QueueManager
     end
   end
 
-  def QueueManager.get_next_user(crn)
-    queue = UserQueue.first(:crn => crn)
+  def QueueManager.get_next_user(crn_list)
+    queue = UserQueue.first(:crn => crn_list.asc)
     if queue == nil
       return nil
     end
