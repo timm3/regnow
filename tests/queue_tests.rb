@@ -5,6 +5,7 @@ require 'rack/test'
 class RegNowUserQueueTest < Test::Unit::TestCase
 
   def setup
+    QueueManager.reset
     QueueManager.create_queue(["-1337", "-1338"])
   end
 
@@ -34,5 +35,10 @@ class RegNowUserQueueTest < Test::Unit::TestCase
     QueueManager.add_user(["-1337", "-1338"], "student")
     assert_equal "student", QueueManager.get_next_user(["-1337", "-1338"])
   end
+
+  def test_select_all
+      assert_equal [QueueManager.get_queue(["-1337", "-1338"])], UserQueue.all
+  end
+
 
 end
