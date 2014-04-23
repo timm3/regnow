@@ -4,49 +4,30 @@ require 'rack/test'
 
 class RegNowDatabaseTest < Test::Unit::TestCase
 
-  class << self
-    def setup
-      @crn = rand(-1000..-1).to_s
-      @title = SecureRandom.hex
-      @year = SecureRandom.hex
-      @term = SecureRandom.hex
-      @course_id = SecureRandom.hex
-      @description = SecureRandom.hex
-      @netid = SecureRandom.hex
-      @course = SecureRandom.hex
-      @subject = SecureRandom.hex
-      @professor = SecureRandom.hex
-      @password = SecureRandom.hex
-      @netid_password = SecureRandom.hex
-      @date = DateTime.now
-    end
+  def test_add_course()
+    DatabaseManager.add_course("test", [5], term="fall",
+                                    subject="Asian American Studies",
+                                    year="2001", crns=["-1337"],
+                                    description="test description",
+                                    code="AAS", course_id="242")
+    assert_equal true, DatabaseManager.check_crn("-1337")
   end
 
-=begin
-  def test_add_course
-      DatabaseManager.add_course(title=@title, credit_hours="0", term=@term,
-                                subject=@subject, year=@year, crns=[],
-                                description=@description,
-                                code=@subject, course_id=@course_id)
-      assert_equal true, DatabaseManager.check_crn(@crn)
-
-  end
-=end
-
-  def test_delete_course
-    DatabaseManager.remove_course(@crn)
-    assert_equal false, DatabaseManager.check_crn(@crn)
+  def test_delete_course()
+    DatabaseManager.remove_course("-1337")
+    assert_equal false, DatabaseManager.check_crn("-1337")
   end
 
   def test_add_user
-    DatabaseManager.add_user(SecureRandom.hex, @netid, @password,
-                              @netid_password, @date, false, false, "", [] )
-    assert_equal true, DatabaseManager.check_netid(@netid)
+    DatabaseManager.add_user("Test T. Name", "student2",
+                    "test_password", "test_netid_password",
+                    false, "asdf", "asdf", [])
+    assert_equal true, DatabaseManager.check_netid("student2")
   end
 
-  def test_delete_user
-    DatabaseManager.remove_user(@netid)
-    assert_equal false, DatabaseManager.check_netid(@netid)
+  def test_delete_user()
+    DatabaseManager.remove_user("student2")
+    assert_equal false, DatabaseManager.check_netid("student2")
   end
 
 end

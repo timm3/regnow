@@ -31,14 +31,11 @@ module DatabaseManager
   end
 
   def DatabaseManager.add_user(name="", netid="", password="",
-                                  netid_password="", join_date="",
-                                  text_only=false, email_only=false,
-                                  number=0, crns=[])
-    user = User.create( :name => name, :netid => netid, :password => password,
-                        :netid_password => netid_password,
-                        :join_date => join_date, :text_only => text_only,
-                        :email_only => email_only , :number => number,
-                        :crns => crns)
+                                  adPassword="", regnow=false, salt="",
+                                  adSalt="", crns=[])
+    user = User.create(:name => name, :netid => netid, :password => password,
+                        :adPassword => adPassword, :regnow => regnow,
+                        :salt => salt, :adSalt => adSalt, :crns => crns)
     user.save
   end
 
