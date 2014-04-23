@@ -460,38 +460,38 @@ post '/search_results' do
 
 	results =""
 	for course in classes
-	if( (course.subject == params[:sel_subj]) && (params[:sel_crse]=="" || params[:sel_crse]==course.course) && (params[:crn]=="dummy" || params[:sel_crn]==course.course_reg_number))
-		if(course.canRegister)
-		results += '<TR>
-			<TD CLASS="dddefault"><ABBR title = "Available for registration">A</ABBR></TD>'
-		else
-		results += 	'<TR>
-			<TD CLASS="dddefault"><ABBR title = Closed>C</ABBR></TD>'
-		end
+		if( (course.subject == params[:sel_subj]) && (params[:sel_crse]=="" || params[:sel_crse]==course.course) && (params[:crn]=="dummy" || params[:sel_crn]==course.course_reg_number))
+			if(course.canRegister)
+			results += '<TR>
+				<TD CLASS="dddefault"><ABBR title = "Available for registration">A</ABBR></TD>'
+			else
+			results += 	'<TR>
+				<TD CLASS="dddefault"><ABBR title = Closed>C</ABBR></TD>'
+			end
 
-		results += '<TD CLASS="dddefault"><A HREF="/BANPROD1/bwckschd.p_disp_listcrse?term_in=120141&amp;subj_in=CS&amp;crse_in=125&amp;crn_in=31152" onMouseOver="window.status=\'Detail\';  return true" onFocus="window.status=\'Detail\';  return true" onMouseOut="window.status='';  return true"onBlur="window.status='';  return true">'+course.course_reg_number+'</A></TD>
-					<TD CLASS="dddefault">'+course.subject+'</TD>
-					<TD CLASS="dddefault">'+course.course+'</TD>
-					<TD CLASS="dddefault">AL1</TD>
-					<TD CLASS="dddefault">100</TD>
-					<TD CLASS="dddefault">4.000</TD>
-					<TD CLASS="dddefault">Intro to Computer Science</TD>
-					<TD CLASS="dddefault">MWF</TD>
-					<TD CLASS="dddefault">02:00 pm-02:50 pm</TD>
-					<TD CLASS="dddefault">'+course.capacity+'</TD>
-					<TD CLASS="dddefault">'+course.num_enrolled+'</TD>
-					<TD CLASS="dddefault">'+(course.capacity.to_i-course.num_enrolled.to_i).to_s+'</TD>
-					<TD CLASS="dddefault">0</TD>
-					<TD CLASS="dddefault">0</TD>
-					<TD CLASS="dddefault">0</TD>
-					<TD CLASS="dddefault">0</TD>
-					<TD CLASS="dddefault">0</TD>
-					<TD CLASS="dddefault">0</TD>
-					<TD CLASS="dddefault">Lawrence Christopher  Angrave (<ABBR title= "Primary">P</ABBR>)</TD>
-					<TD CLASS="dddefault">01/21-05/07</TD>
-					<TD CLASS="dddefault">1SIEBL 1404</TD>
-					<TD CLASS="dddefault">UIUC: Quant Reasoning I</TD>
-					</TR>'
+			results += '<TD CLASS="dddefault"><A HREF="/BANPROD1/bwckschd.p_disp_listcrse?term_in=120141&amp;subj_in=CS&amp;crse_in=125&amp;crn_in=31152" onMouseOver="window.status=\'Detail\';  return true" onFocus="window.status=\'Detail\';  return true" onMouseOut="window.status='';  return true"onBlur="window.status='';  return true">'+course.course_reg_number+'</A></TD>
+						<TD CLASS="dddefault">'+course.subject+'</TD>
+						<TD CLASS="dddefault">'+course.course+'</TD>
+						<TD CLASS="dddefault">AL1</TD>
+						<TD CLASS="dddefault">100</TD>
+						<TD CLASS="dddefault">4.000</TD>
+						<TD CLASS="dddefault">Intro to Computer Science</TD>
+						<TD CLASS="dddefault">MWF</TD>
+						<TD CLASS="dddefault">02:00 pm-02:50 pm</TD>
+						<TD CLASS="dddefault">'+course.capacity+'</TD>
+						<TD CLASS="dddefault">'+course.num_enrolled+'</TD>
+						<TD CLASS="dddefault">'+(course.capacity.to_i-course.num_enrolled.to_i).to_s+'</TD>
+						<TD CLASS="dddefault">0</TD>
+						<TD CLASS="dddefault">0</TD>
+						<TD CLASS="dddefault">0</TD>
+						<TD CLASS="dddefault">0</TD>
+						<TD CLASS="dddefault">0</TD>
+						<TD CLASS="dddefault">0</TD>
+						<TD CLASS="dddefault">Lawrence Christopher  Angrave (<ABBR title= "Primary">P</ABBR>)</TD>
+						<TD CLASS="dddefault">01/21-05/07</TD>
+						<TD CLASS="dddefault">1SIEBL 1404</TD>
+						<TD CLASS="dddefault">UIUC: Quant Reasoning I</TD>
+						</TR>'
 		end
 	end
 	index = output.index("<!--SECTIONS-->")
