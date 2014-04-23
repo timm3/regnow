@@ -24,7 +24,7 @@ class RegNow < Sinatra::Application
 
 end
 
-def auto_register( netid, crn_str)
+def auto_register(netid, crn_str)
   output = ""
 
   if netid == nil || crn_str == nil

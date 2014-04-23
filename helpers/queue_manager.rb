@@ -10,6 +10,14 @@ module QueueManager
     return queue
   end
 
+  def QueueManager.reset
+    UserQueue.delete_all
+  end
+
+  def QueueManager.select_all
+    return UserQueue.find()
+  end
+
   def QueueManager.select_queue
     queue = UserQueue.first(:order => :crn.asc)
     return queue
