@@ -26,7 +26,7 @@ end
 
 before do
    headers 'Access-Control-Allow-Origin' => '*',
-            'Access-Control-Allow-Methods' => ['GET', 'POST']
+            'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST']
 end
 
 def auto_register(netid, crn_str)
@@ -73,6 +73,10 @@ def reg_status( netid)
   output
 end
 
+options '/register' do
+  200
+end
+
 get "/register" do
   netid = params[:netid]
   crn_str = params[:crns]
@@ -85,6 +89,10 @@ post "/register" do
   crn_str = params[:crns]
 
   auto_register netid, crn_str
+end
+
+options '/status' do
+  200
 end
 
 get "/status" do
