@@ -3,7 +3,7 @@ module Registration
   # random value between 2-6
   def Registration.human_delay
     #return 2+rand(5)
-    return 0
+    return 1
   end
 
   #return an array of queues that this netid is waitlisted for,
@@ -26,6 +26,7 @@ module Registration
   #
   # TODO: implement email-only notification triggering
   def Registration.update_queues
+
     changes = Array.new
 
     sleep Registration.human_delay
@@ -47,9 +48,12 @@ module Registration
         if open_spots < min_open_spots
           min_open_spots = open_spots
         end
+
+        puts "min open spots: " + min_open_spots.to_s
+
       end
 
-      for i in 0..min_open_spots
+      for i in 0..min_open_spots-1
 
         netid= current_queue[:netids].first
         if(netid == nil)

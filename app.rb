@@ -99,6 +99,7 @@ puts 'RegNow Automatic Registration Starting'
 Thread.new do
 
   while true
+    puts 'Looping ' + Time.now.to_s
     results = Registration.update_queues
     if results.size > 0
       puts "Registration Results:"
