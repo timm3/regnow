@@ -56,10 +56,3 @@ post "/register" do
 
   auto_register netid, crn_str
 end
-
-threads = RegNowThreads.new(5)
-Thread.new do # TODO: process course search queue
-  while true do
-     Registration.update_queues
-  end
-end
