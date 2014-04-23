@@ -24,6 +24,11 @@ class RegNow < Sinatra::Application
 
 end
 
+before do
+   headers 'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => ['GET', 'POST']
+end
+
 def auto_register(netid, crn_str)
   output = ""
 
