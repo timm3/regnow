@@ -4,10 +4,12 @@ class User
   key :name,          String
   key :netid,         String
   key :password,      String
-  key :netid_password,String
-  key :join_date,     Date
-  key :text_only,     Boolean
-  key :email_only,    Boolean
-  key :number,        String
-  key :crns,          Array
+  key :adPassword,    String
+  key :regnow,        Boolean
+  key :salt,          String
+  key :adSalt,        String
+#  key :text_only,     Boolean
+#  key :email_only,    Boolean
+#  key :number,        String
+#  key :crns,          Array
 end
