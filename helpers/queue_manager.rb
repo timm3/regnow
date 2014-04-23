@@ -38,6 +38,10 @@ module QueueManager
 
   def QueueManager.remove_user(crn_list, netid)
     queue = UserQueue.first(:crn => crn_list.asc)
+    remove_user_from_queue(queue, netid)
+  end
+
+  def QueueManager.remove_user_from_queue(queue, netid)
     if queue == nil
       return false
     end

@@ -7,28 +7,51 @@ module Registration
 
   # one iteration of updating all classes available and registering
   # users from queues if spots are open
-  # TODO: implement timeouts for all bot action
+  #
   # TODO: implement email-only notification triggering
-  # TODO: implement pool of backend threads
   def Registration.update_queues
     sleep Registration.human_delay
-    current_queue = QueueManager.select_queue
-    if current_queue
-      queue_crn = current_queue[:crn]
-      netid = current_queue[:netids].first
-      user = User.first(:netid => netid)
-      password = DatabaseManager.retrieve_netid_password(netid)
-      $regnow_bot = CourseManager.new(netid, password)
-      open_spots = $regnow.get_open_spots(queue_crn)
-      if open_spots > 0 && user.text_only
-        NotificationManager.send_text_notification(user.number, queue_crn)
-      elsif open_spots > 0
-        $regnow_bot.register(queue_crn)
-        QueueManager.remove_user(queue_crn, netid)
-        if current_queue[:netids].length == 0
-          current_queue.destroy
+    all_queues = QueueManager.get_all_queues
+
+    regnow_bot = CourseManager.new
+
+    for current_queue in all_queues
+      crn_list = current_queue[:crn]
+
+      open_spots = regnow_bot.get_open_spots(queue_crn)
+      for i in 0..open_spots
+        current_user = QueueManager.get_next_user(crn_list)
+        if(current_user == nil)
+          break
         end
+
+        netid = current_user[:netid]
+        user_bot = CourseManager.new( netid, current_user[:password])
+        reg_success = user_bot.register(crn_list)
+
+        msg = ''
+        if reg_success
+          msg += 'SUCCESS: '
+
+        #registration failed for user
+        else
+          msg += 'FAILURE: '
+        end
+
+        msg += 'Register ' + netid + ' for CRNs: '
+        for crn in crn_list
+          msg += crn + ' '
+        end
+        puts msg
+
+        QueueManager.remove_user_from_queue( current_queue , netid)
       end
+
+      #queue is empty, so we don't need to be checking it anymore
+      if current_queue[:netids].length == 0
+        current_queue.destroy
+      end
+
     end
   end
 
