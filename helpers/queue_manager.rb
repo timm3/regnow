@@ -3,6 +3,8 @@ module QueueManager
   def QueueManager.create_queue(crn_list)
     queue = UserQueue.create(:crn => crn_list.sort, :netids => [])
     queue.save
+
+    return queue
   end
 
   def QueueManager.get_queue(crn_list)
@@ -23,7 +25,7 @@ module QueueManager
     if queue == nil
       queue = QueueManager.create_queue(crn_list.sort)
     end
-    if !queue[:netids].include?(netid)
+    if !(queue[:netids].include?(netid))
       queue[:netids] << netid
       queue.save
       return true

@@ -74,8 +74,15 @@ class MockUser
 	end
 
 	def canRegister(crn,classes)
-		if( classExists(crn,classes) )
+		sec = getSection(crn,classes)
+		if( sec != nil )
 
+			#check number of spots
+			if !sec.canRegister
+				return false
+			end
+
+			#check to make sure student isn't in this section already
 			for sec in @crns
 				if(sec==crn)
 					return false

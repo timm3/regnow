@@ -39,7 +39,32 @@ def auto_register(netid, crn_str)
     for crn in crn_list
       output += crn + " "
     end
+
+    QueueManager.add_user(crn_list, netid)
+
   end
+  output
+end
+
+#returns string of waiting lists. Each waiting list is surrounded by parentheses
+# with its netids inside, separated by commas
+def reg_status( netid)
+  waiting_lists = Registration.status( netid )
+
+  output = ""
+  for waiting_list in waiting_lists
+    output +='('
+
+    for crn in waiting_list
+      if(waiting_list!=waiting_lists[0])
+        output += ','
+      end
+      output += crn
+    end
+
+    output +=')'
+  end
+
   output
 end
 
@@ -55,4 +80,37 @@ post "/register" do
   crn_str = params[:crns]
 
   auto_register netid, crn_str
+end
+
+get "/status" do
+  netid = params[:netid]
+
+  reg_status netid
+end
+
+post "/status" do
+  netid = params[:netid]
+
+  reg_status netid
+end
+
+#main loop
+puts 'RegNow Automatic Registration Starting'
+Thread.new do
+
+  while true
+    results = Registration.update_queues
+    if results.size > 0
+      puts "Registration Results:"
+    end
+    for r in results
+      output = ""
+      for str in r
+        output += str + " "
+      end
+      puts output
+    end
+
+  end
+
 end

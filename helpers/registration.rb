@@ -2,7 +2,23 @@ module Registration
 
   # random value between 2-6
   def Registration.human_delay
-    return 2+rand(5)
+    #return 2+rand(5)
+    return 0
+  end
+
+  #return an array of queues that this netid is waitlisted for,
+  # each queue is represented as an array of CRNs
+  def Registration.status( netid )
+    waiting_array = Array.new
+
+    all_queues = QueueManager.get_all_queues
+    for current_queue in all_queues
+      if current_queue[:netids].include?(netid)
+        waiting_array.push( current_queue[:crn] )
+      end
+    end
+
+    return waiting_array
   end
 
   # one iteration of updating all classes available and registering
@@ -10,28 +26,46 @@ module Registration
   #
   # TODO: implement email-only notification triggering
   def Registration.update_queues
+    changes = Array.new
+
     sleep Registration.human_delay
-    all_queues = QueueManager.get_all_queues
+    all_queues = QueueManager.select_all
+
+    if all_queues==nil
+      return nil
+    end
 
     regnow_bot = CourseManager.new
 
     for current_queue in all_queues
       crn_list = current_queue[:crn]
 
-      open_spots = regnow_bot.get_open_spots(queue_crn)
-      for i in 0..open_spots
-        current_user = QueueManager.get_next_user(crn_list)
-        if(current_user == nil)
+      min_open_spots = 1000000
+      for queue_crn in crn_list
+        open_spots = regnow_bot.get_open_spots(queue_crn)
+
+        if open_spots < min_open_spots
+          min_open_spots = open_spots
+        end
+      end
+
+      for i in 0..min_open_spots
+
+        netid= current_queue[:netids].first
+        if(netid == nil)
           break
         end
 
-        netid = current_user[:netid]
-        user_bot = CourseManager.new( netid, current_user[:password])
-        reg_success = user_bot.register(crn_list)
+        password = DatabaseManager.retrieve_netid_password(netid)
+        user_bot = CourseManager.new( netid, password)
+
+        reg_success = user_bot.register_crn_list crn_list
 
         msg = ''
         if reg_success
           msg += 'SUCCESS: '
+
+          changes.push( [netid] + crn_list)
 
         #registration failed for user
         else
@@ -53,6 +87,8 @@ module Registration
       end
 
     end
+
+    return changes
   end
 
 end

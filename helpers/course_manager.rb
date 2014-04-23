@@ -68,9 +68,9 @@ class CourseManager
     crn_form.crn = crn
     page = @bot.submit(crn_form, crn_form.button_with(:name => 'SUB_BTN'))
 =end
-    if !DatabaseManager.check_crn(crn)
-      return false
-    end
+    #if !DatabaseManager.check_crn(crn)
+    #  return false
+    #end
     page = @bot.get(@current_term_crn + crn.to_s)
     remaining_seats = page.search('/html/body/div[3]/table[1]/tr[2]/td/table/tr[2]/td[3]').first.text
     return remaining_seats.to_i
