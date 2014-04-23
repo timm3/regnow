@@ -15,13 +15,13 @@ module QueueManager
   end
 
   def QueueManager.select_all
-    return UserQueue.find()
+    return UserQueue.all
   end
 
   def QueueManager.add_user(crn_list, netid)
     queue = UserQueue.first(:crn => crn_list.sort)
     if queue == nil
-      queue = QueueManager.create_queue(crn_list)
+      queue = QueueManager.create_queue(crn_list.sort)
     end
     if !queue[:netids].include?(netid)
       queue[:netids] << netid
