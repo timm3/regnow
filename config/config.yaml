@@ -1,5 +1,5 @@
 development:
-  host: host
+  host: illiniregnow.com
   port: 27017
   database: courses
 
@@ -8,4 +8,3 @@ netid: NETID
 password: PASSWORD
 twilio_account_sid: TWILIO_ACCOUNT_SID
 twilio_auth_token: TWILIO_AUTH_TOKEN
-
