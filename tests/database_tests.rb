@@ -25,9 +25,14 @@ class RegNowDatabaseTest < Test::Unit::TestCase
     assert_equal true, DatabaseManager.check_netid("student2")
   end
 
-  def test_delete_user()
-    DatabaseManager.remove_user("student2")
-    assert_equal false, DatabaseManager.check_netid("student2")
+  def test_user_password
+    password = DatabaseManager.retrieve_netid_password("student2")
+    assert_equal "test_netid_password", password
   end
+
+  #def test_delete_user()
+  #  DatabaseManager.remove_user("student2")
+  #  assert_equal false, DatabaseManager.check_netid("student2")
+  #end
 
 end

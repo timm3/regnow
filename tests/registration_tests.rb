@@ -17,7 +17,7 @@ class RegNowDatabaseTest < Test::Unit::TestCase
 
     class_added = results.include?( ['student_reg_test','12344','12345'])
 
-    assert true,
+    assert_equal true, class_added
   end
 
 end

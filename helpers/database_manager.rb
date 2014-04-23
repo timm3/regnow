@@ -41,7 +41,10 @@ module DatabaseManager
 
   def DatabaseManager.retrieve_netid_password(netid)
     user = User.first(:netid => netid)
-    return user[:netid_password]
+    if user == nil
+      return false
+    end
+    return user.adPassword
   end
 
   def DatabaseManager.remove_user(net_id)
