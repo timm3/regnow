@@ -42,6 +42,12 @@ def auto_register(netid, crn_str)
 
     QueueManager.add_user(crn_list, netid)
 
+    msg =  "adding user " + netid + " to queue "
+    for crn in crn_list
+      msg += crn + " "
+    end
+    puts msg
+
   end
   output
 end

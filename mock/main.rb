@@ -20,6 +20,7 @@ FILE_ADVANCED_SEARCH  = FOLDER + 'banner_advanced_search.html'
 FILE_CLASS_RESULTS    = FOLDER + 'banner_class_results.html'
 FILE_ADD_DROP_CLASSES = FOLDER + 'banner_add_drop_classes.html'
 FILE_DETAILED				 = FOLDER + 'banner_detailed.html'
+FILE_CLASS_NOT_FOUND  = FOLDER + 'banner_class_not_found.html'
 
 class Section
 	attr_reader :course_reg_number
@@ -134,10 +135,33 @@ File.open( FILE_CONFIG, 'r') do |f1|
 			name					= parsed_values[5]
 
 			new_section = Section.new( course_number, subject, course, num_enrolled, capacity, name )
-			classes.push( new_section )
+			#classes.push( new_section )
 		end
 	end
 end
+
+#add all valid courses from DB
+
+
+Course.find_each() do |course|
+	for crn in course[:crns]
+		crn = crn.to_s
+
+		course_number = crn
+		subject = "XY"
+		course = "123"
+		num_enrolled = "0"
+		capacity = "100"
+		name = "no name"
+
+		new_section = Section.new( course_number, subject, course, num_enrolled, capacity, name )
+
+		puts 'added class with crn: '+crn
+
+		classes.push( new_section )
+	end
+end
+
 
 def classExists(crn,classes)
 	for section in classes
@@ -219,8 +243,14 @@ post '/logout.do' do
 			end
 		end
 
-		puts "LOGGED OUT: "+current_user.netid
-		current_user = nil
+		if(current_user==nil)
+			html_output = "failed to find current user"
+		else
+			puts "LOGGED OUT: "+current_user.netid
+			current_user = nil
+		end
+
+
 
 		html_output
 	end
@@ -790,7 +820,13 @@ get '/detailed' do
 		html_output.insert(index,(section.capacity.to_i-section.num_enrolled.to_i).to_s)
 
 	else
-		html_output = "error crn not found. (proper url: detailed?crn_in=12345 )"
+		File.open( FILE_CLASS_NOT_FOUND, 'r') do |f1|
+			while line = f1.gets
+				html_output += line
+			end
+		end
+
+
 	end
 
 

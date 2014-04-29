@@ -61,17 +61,15 @@ class CourseManager
   end
 
   def get_open_spots(crn)
-=begin
-    options_form = page.form_with(:action => '/BANPROD1/bwskfcls.P_GetCrse')
-    page = @bot.submit(options_form, options_form.button_with(:value => 'Advanced Search'))
-    crn_form = page.form_with(:action => '/BANPROD1/bwskfcls.P_GetCrse_Advanced')
-    crn_form.crn = crn
-    page = @bot.submit(crn_form, crn_form.button_with(:name => 'SUB_BTN'))
-=end
-    #if !DatabaseManager.check_crn(crn)
-    #  return false
-    #end
+
     page = @bot.get(@current_term_crn + crn.to_s)
+
+    #if class doesn't exist return false
+    if( page.search('span.errortext').length > 0 )
+      return false
+    end
+
+
     remaining_seats = page.search('/html/body/div[3]/table[1]/tr[2]/td/table/tr[2]/td[3]').first.text
     return remaining_seats.to_i
   end
@@ -111,12 +109,10 @@ class CourseManager
 
     #if there are any add errors, return false
     if( page.search('span.errortext').length > 0 )
-      #TODO: logout
       logout
       return false
     end
 
-    #TODO: this is generating an error in tests for some reason
     logout
 
     return true

@@ -39,18 +39,39 @@ module Registration
     regnow_bot = CourseManager.new
 
     for current_queue in all_queues
+
       crn_list = current_queue[:crn]
 
       min_open_spots = 1000000
       for queue_crn in crn_list
         open_spots = regnow_bot.get_open_spots(queue_crn)
 
+
+        if open_spots == false
+          current_queue.destroy
+          min_open_spots = false
+          break
+        end
+
         if open_spots < min_open_spots
           min_open_spots = open_spots
         end
 
-        puts "min open spots: " + min_open_spots.to_s
+        #puts "min open spots: " + min_open_spots.to_s
 
+      end
+
+      if min_open_spots == false
+        current_queue.destroy
+
+        #msg += 'Removing invalid Queue for CRNs: '
+        #for crn in crn_list
+        #  msg += crn + ' '
+        #end
+        #puts msg
+
+        puts 'invalid queue removed'
+        next
       end
 
       for i in 0..min_open_spots-1
