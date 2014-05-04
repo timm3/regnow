@@ -35,23 +35,29 @@ def auto_register(netid, crn_str)
   if netid == nil || crn_str == nil
     output = "error with input"
   else
-    crn_list = crn_str.split(",")
 
-    output += "Netid :"+ netid + " CRNs: "
+    grouping_lists = crn_str.split(".")
 
-    #TODO validate netid, add user with this netid to queue
+    for grouping in grouping_lists
+      crn_list = grouping.split(",")
 
-    for crn in crn_list
-      output += crn + " "
+      output += "Netid :"+ netid + " CRNs: "
+
+      #TODO validate netid, add user with this netid to queue
+
+      for crn in crn_list
+        output += crn + " "
+      end
+
+      QueueManager.add_user(crn_list, netid)
+
+      msg =  "adding user " + netid + " to queue "
+      for crn in crn_list
+        msg += crn + " "
+      end
+      puts msg
+
     end
-
-    QueueManager.add_user(crn_list, netid)
-
-    msg =  "adding user " + netid + " to queue "
-    for crn in crn_list
-      msg += crn + " "
-    end
-    puts msg
 
   end
   output

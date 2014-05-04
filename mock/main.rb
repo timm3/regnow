@@ -26,7 +26,7 @@ class Section
 	attr_reader :course_reg_number
 	attr_reader :subject
 	attr_reader :course
-	attr_reader :num_enrolled
+	attr_accessor :num_enrolled
 	attr_reader :capacity
 	attr_reader :name
 
@@ -135,7 +135,7 @@ File.open( FILE_CONFIG, 'r') do |f1|
 			name					= parsed_values[5]
 
 			new_section = Section.new( course_number, subject, course, num_enrolled, capacity, name )
-			#classes.push( new_section )
+			classes.push( new_section )
 		end
 	end
 end
@@ -622,6 +622,10 @@ end
 
 post '/add_drop_classes' do
 
+	if current_user == nil
+		puts "error no user logged in"
+	end
+
 	html_output = ""
 
 	error_crns = Array.new
@@ -630,6 +634,8 @@ post '/add_drop_classes' do
 
 	for crn in [ params[:CRN_IN1], params[:CRN_IN2], params[:CRN_IN3], params[:CRN_IN4], params[:CRN_IN5] , params[:CRN_IN6] , params[:CRN_IN7] , params[:CRN_IN8], params[:CRN_IN9] , params[:CRN_IN10]     ]
 		if(crn!="")
+
+
 				if(current_user.canRegister(crn,classes))
 					add_crns.push(crn)
 					puts "REGISTERED FOR CRN '" + crn + "' (netid: '" + current_user.netid + "')"
@@ -836,4 +842,13 @@ get '/detailed' do
 
 
 	html_output
+end
+
+get '/open_spot' do
+	crn = params[:crn]
+
+	if(classExists(crn,classes))
+		section = getSection(crn,classes)
+		section.num_enrolled = "0"
+	end
 end
