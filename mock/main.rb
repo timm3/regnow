@@ -74,6 +74,10 @@ class MockUser
 		@crns.push(crn)
 	end
 
+	def clear_classes()
+		@crns = Array.new
+	end
+
 	def canRegister(crn,classes)
 		sec = getSection(crn,classes)
 		if( sec != nil )
@@ -851,4 +855,21 @@ get '/open_spot' do
 		section = getSection(crn,classes)
 		section.num_enrolled = "0"
 	end
+end
+
+get '/clear_classes' do
+	html_output = ""
+	for user in users
+		if ( user.netid == params[:netid])
+			user.clear_classes()
+
+			puts "Cleared Classes for: "+user.netid
+
+			html_output +="Cleared Classes for: "+user.netid
+
+			break
+		end
+	end
+	html_output
+
 end
