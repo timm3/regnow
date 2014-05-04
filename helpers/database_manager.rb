@@ -1,5 +1,6 @@
 module DatabaseManager
 
+  #add a new course to the databse
   def DatabaseManager.add_course(title="", credit_hours=0, term="",
                                   subject="", year="", crns=[], description="",
                                   code="", course_id="")
@@ -10,6 +11,7 @@ module DatabaseManager
     course.save
   end
 
+  #delete course with given CRN from database
   def DatabaseManager.remove_course(crn)
     # TODO: implement
     Course.find_each() do |course|
@@ -20,6 +22,7 @@ module DatabaseManager
 
   end
 
+  #check if given CRN exists in database
   def DatabaseManager.check_crn(crn)
     Course.find_each() do |course|
       if course[:crns].include?(crn.to_s)
@@ -30,6 +33,7 @@ module DatabaseManager
     return false
   end
 
+  #add user to database
   def DatabaseManager.add_user(name="", netid="", password="",
                                   adPassword="", regnow=false, salt="",
                                   adSalt="", crns=[])
@@ -39,6 +43,7 @@ module DatabaseManager
     user.save
   end
 
+  #get the netID password corresponding to that netID
   def DatabaseManager.retrieve_netid_password(netid)
     user = User.first(:netid => netid)
     if user == nil
@@ -47,6 +52,7 @@ module DatabaseManager
     return user.adPassword
   end
 
+  #remove user from database that has given netid
   def DatabaseManager.remove_user(net_id)
     User.find_each() do |user|
       if user[:netid] == net_id
@@ -55,6 +61,7 @@ module DatabaseManager
     end
   end
 
+  #check if given netid exists
   def DatabaseManager.check_netid(net_id)
     User.find_each() do |user|
       if user[:netid] == net_id
@@ -65,9 +72,8 @@ module DatabaseManager
     return false
   end
 
+  #delete all courses from database
   def DatabaseManager.reset_database()
     Course.delete_all
-
-    # TODO: populate courses collection here...
   end
 end
