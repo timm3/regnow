@@ -3,6 +3,11 @@ require_relative 'database_manager'
 
 TEST_MODE = true
 
+#TEST_URL = 'http://localhost:4567'
+#TEST_URL = 'http://localhost:9292'
+TEST_URL = 'http://illiniregnow.com:9292'
+
+
 class CourseManager
 
   def initialize(netid=$netid, password=$password)
@@ -19,11 +24,11 @@ class CourseManager
     @add_course_form_action = 'https://ui2web1.apps.uillinois.edu/BANPROD1/bwckcoms.P_Regs'
 
     if( TEST_MODE )
-      @login_url = 'http://localhost:4567/enterprise'
-      @logout_url = 'http://localhost:4567/twbkwbis.P_Logout'
-      @select_term_url = 'http://localhost:4567/select_term'
-      @current_term_crn = 'http://localhost:4567/detailed?crn_in='
-      @add_course_url = 'http://localhost:4567/add_drop_classes'
+      @login_url = TEST_URL + '/enterprise'
+      @logout_url = TEST_URL + '/twbkwbis.P_Logout'
+      @select_term_url = TEST_URL + '/select_term'
+      @current_term_crn = TEST_URL + '/detailed?crn_in='
+      @add_course_url = TEST_URL + '/add_drop_classes'
 
       @select_term_action = '/select_classes'
       @add_course_form_action = 'add_drop_classes'
