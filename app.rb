@@ -1,11 +1,4 @@
-require 'sinatra'
-require 'mongo_mapper'
-require 'securerandom'
-
-require_relative 'helpers/init'
-require_relative 'models/init'
-require_relative 'routes/init'
-require_relative 'config/db'
+require_relative './requirements'
 require_relative 'mock/main'
 
 class RegNow < Sinatra::Application
@@ -29,6 +22,15 @@ before do
             'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST']
 end
 
+#Automatically add a user with this netid to registration queues
+# for the selected classes
+#
+# the CRNs should be grouped by class. CRNs in the same classes must be separated by commas,
+# different classes should be separated by periods.
+#
+#example: CRNs 1 and 2 are for the same class, crn 3 is a different class
+# ?netid=student1&crns=1,2.3
+#
 def auto_register(netid, crn_str)
   output = ""
 
@@ -73,7 +75,7 @@ def reg_status( netid)
     output +='('
 
     for crn in waiting_list
-      if(waiting_list!=waiting_lists[0])
+      if crn != waiting_list[0]
         output += ','
       end
       output += crn

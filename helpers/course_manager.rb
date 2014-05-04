@@ -32,7 +32,7 @@ class CourseManager
     @bot = Mechanize.new
   end
 
-  # log into self-service and chooses latest semester term
+  # log into self-service
   def login
     page = @bot.get(@login_url)
     login_form = page.form('easForm')
@@ -42,6 +42,7 @@ class CourseManager
     page = @bot.submit(login_form, login_form.button_with(:value => 'Login'))
   end
 
+  #chooses latest semester term. User must be logged in first
   def choose_latest_semester
     sleep Registration.human_delay
     page = @bot.get(@select_term_url)
@@ -51,6 +52,7 @@ class CourseManager
     page = @bot.submit(term_form, term_form.button_with(:value => 'Submit'))
   end
 
+  #logs user out of registration system
   def logout
     sleep Registration.human_delay
     page = @bot.get(@logout_url)
@@ -60,6 +62,8 @@ class CourseManager
     page = @bot.submit(logout_form, logout_form.button_with(:value => 'Yes'))
   end
 
+  #returns number of spots for a specific crn. User DOES NOT need to be logged in
+  # for this to be successful
   def get_open_spots(crn)
 
     page = @bot.get(@current_term_crn + crn.to_s)
@@ -74,6 +78,8 @@ class CourseManager
     return remaining_seats.to_i
   end
 
+  #returns number of spots in a class for a specific crn. User DOES NOT need to be logged in
+  # for this to be successful
   def get_total_spots(crn)
     if !DatabaseManager.check_crn(crn)
       return false
@@ -83,16 +89,9 @@ class CourseManager
     return total_seats.to_i
   end
 
+  #register selected student for an array of crns conccurenly
+  # returns true if registration is successful, false if it failed
   def register_crn_list(crn_list)
-
-    #TODO figure out how to check that CRN exists for testing
-
-    #for crn in crn_list
-    #  if !DatabaseManager.check_crn(crn)
-    #    return false
-    #  end
-    #end
-
     login
     choose_latest_semester
     page = @bot.get(@add_course_url)
@@ -118,9 +117,4 @@ class CourseManager
     return true
   end
 
-  def can_register(crn)
-
-    # TODO: returns if user can or cannot register for course
-
-  end
 end

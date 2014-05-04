@@ -11,7 +11,7 @@ module Registration
   def Registration.status( netid )
     waiting_array = Array.new
 
-    all_queues = QueueManager.get_all_queues
+    all_queues = QueueManager.select_all
     for current_queue in all_queues
       if current_queue[:netids].include?(netid)
         waiting_array.push( current_queue[:crn] )

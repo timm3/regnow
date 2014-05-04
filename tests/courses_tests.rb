@@ -1,4 +1,5 @@
-require '../app'
+require_relative '../requirements'
+
 require 'test/unit'
 require 'rack/test'
 
@@ -31,16 +32,6 @@ class RegNowCoursesTest < Test::Unit::TestCase
   def test_register_valid_course
     result = @test_bot.register_crn_list(["12344","12345"])
     assert_equal true, result
-  end
-
-  def test_course_crns
-    Course.find_each() do |course|
-      contains = course[:crns].length > 0
-      #if !contains
-      #  next
-      #end
-      assert_equal contains, true
-    end
   end
 
   def test_environment

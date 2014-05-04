@@ -1,4 +1,5 @@
 require 'sinatra'
+require_relative '../requirements'
 
 FILE_CONFIG           = File.dirname(__FILE__) + "/classes.csv"
 FILE_USERS           = File.dirname(__FILE__) + "/users.csv"
@@ -145,8 +146,6 @@ File.open( FILE_CONFIG, 'r') do |f1|
 end
 
 #add all valid courses from DB
-
-
 Course.find_each() do |course|
 	for crn in course[:crns]
 		crn = crn.to_s
